@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetNES", "LeetNES\LeetNES.csproj", "{A1CFE58E-50DA-482E-A4A6-10187578FD54}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "roms", "roms", "{A3AE05E8-7790-462A-813D-ADEFE600943F}"
+	ProjectSection(SolutionItems) = preProject
+		LeetNES\roms\nestest.log = LeetNES\roms\nestest.log
+		LeetNES\roms\nestest.nes = LeetNES\roms\nestest.nes
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

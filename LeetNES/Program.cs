@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac;
 
 namespace LeetNES
 {
@@ -10,6 +11,24 @@ namespace LeetNES
     {
         static void Main(string[] args)
         {
+            var containerBuilder = new ContainerBuilder();
+            
+            containerBuilder.RegisterType<Cpu>().As<ICpu>().SingleInstance();
+            containerBuilder.RegisterType<Emulator>().As<IEmulator>();
+            containerBuilder.RegisterType<Memory>().As<IMemory>().SingleInstance();
+            containerBuilder.RegisterType<Ppu>().As<IPpu>();
+           
+
+            var container = containerBuilder.Build();
+
+            var emulator = container.Resolve<IEmulator>();
+            var memory = container.Resolve<IMemory>();
+            memory.SetCartridge(new Cartridge("../../roms/nestest.nes"));
+            emulator.Reset();
+            for (;;)
+            {
+                emulator.Step();
+            }
         }
     }
 }
