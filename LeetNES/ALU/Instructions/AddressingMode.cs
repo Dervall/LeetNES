@@ -1,3 +1,5 @@
+using System;
+
 namespace LeetNES.ALU.Instructions
 {
     public enum AddressingMode
@@ -15,5 +17,43 @@ namespace LeetNES.ALU.Instructions
         ZeroPage,           // OPC $LL	 	    operand is of address; address hibyte = zero ($00xx)
         ZeroPageXIndexed,   // OPC $LL,X	 	operand is address incremented by X; address hibyte = zero ($00xx); no page transition
         ZeroPageYIndexed,   // OPC $LL,Y	 	operand is address incremented by Y; address hibyte = zero ($00xx); no page transition
+    }
+
+    public static class AddressingModeExtensions
+    {
+        public static ushort InstructionSize(this AddressingMode mode)
+        {
+            switch (mode)
+            {
+                case AddressingMode.Accumulator:
+                    return 1;
+                case AddressingMode.Absolute:
+                    return 3;
+                case AddressingMode.AbsoluteX:
+                    return 3;
+                case AddressingMode.AbsoluteY:
+                    return 3;
+                case AddressingMode.Immediate:
+                    return 2;
+                case AddressingMode.Implied:
+                    return 1;
+                case AddressingMode.Indirect:
+                    return 3;
+                case AddressingMode.XIndexedIndirect:
+                    return 2;
+                case AddressingMode.IndirectYIndexed:
+                    return 2;
+                case AddressingMode.Relative:
+                    return 2;
+                case AddressingMode.ZeroPage:
+                    return 2;
+                case AddressingMode.ZeroPageXIndexed:
+                    return 2;
+                case AddressingMode.ZeroPageYIndexed:
+                    return 2;
+                default:
+                    throw new Exception("Unknown addressing mode");
+            }
+        }
     }
 }

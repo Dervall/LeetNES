@@ -17,7 +17,7 @@ namespace LeetNES
             this.cartridge = cartridge;
         }
 
-        public byte this[ushort addr]
+        public byte this[int addr]
         {
             get
             {
@@ -28,17 +28,20 @@ namespace LeetNES
                 if (addr < 0x4000)
                 {
                     // Registers
-                    throw new NotImplementedException();
+                    // TODO
+                    return 0;
                 }
                 if (addr < 0x6000)
                 {
                     // APU and expansion rom.
-                    throw new NotImplementedException();
+                    // TODO
+                    return 0;
                 }
                 if (addr < 0x8000)
                 {
                     // SRAM
-                    throw new NotImplementedException();
+                    // TODO
+                    return 0;
                 }
                 
                 return cartridge.ReadPrgRom((ushort) (addr & 0x3FFF));

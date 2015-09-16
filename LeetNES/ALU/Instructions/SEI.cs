@@ -1,22 +1,37 @@
+using System.Collections.Generic;
+
 namespace LeetNES.ALU.Instructions
 {
-    public class SEI : ImpliedInstruction
-    {
-        public override byte OpCode
-        {
-            get { return 0x78; }
-        }
-
+    /// SEI  Set Interrupt Disable Status
+    ///
+    /// 1 -> I                           N Z C I D V
+    ///                                  - - - 1 - -
+    ///
+    /// addressing    assembler    opc  bytes  cyles
+    /// --------------------------------------------
+    /// implied       SEI           78    1     2
+    ///
+    public class SEI : BaseInstruction
+    {        
         public override string Mnemonic
         {
             get { return "SEI"; }
         }
 
-        public override int Execute(Cpu.State cpuState, IMemory memory)
+        public override IDictionary<byte, AddressingMode> Variants
+        {
+            get 
+            { 
+                return new Dictionary<byte, AddressingMode> {
+                {
+                    0x78, AddressingMode.Implied
+                }}; 
+            }
+        }
+
+        protected override void InternalExecute(Cpu.State cpuState, IMemory memory, byte arg, ref int cycles)
         {
             cpuState.SetFlag(Cpu.Flags.InterruptDisable, true);
-            cpuState.p++;
-            return 2;
         }
     }
 }

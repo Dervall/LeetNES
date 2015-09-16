@@ -1,15 +1,35 @@
+using System.Collections.Generic;
+
 namespace LeetNES.ALU.Instructions
 {
-    public class CLD : ImpliedInstruction
+    /// <summary>
+    /// CLD  Clear Decimal Mode
+    /// 
+    /// 0 -> D                           N Z C I D V
+    ///                                  - - - - 0 -
+    /// 
+    /// addressing    assembler    opc  bytes  cyles
+    /// --------------------------------------------
+    /// implied       CLD           D8    1     2
+    /// </summary>
+    public class CLD : BaseInstruction
     {
-        public override byte OpCode { get { return 0xD8; }}
         public override string Mnemonic { get { return "CLD"; } }
-        
-        public override int Execute(Cpu.State cpuState, IMemory memory)
+
+        public override IDictionary<byte, AddressingMode> Variants
+        {
+            get 
+            { 
+                return new Dictionary<byte, AddressingMode>
+                {
+                    { 0xD8, AddressingMode.Implied }    
+                }; 
+            }
+        }
+
+        protected override void InternalExecute(Cpu.State cpuState, IMemory memory, byte arg, ref int cycles)
         {
             cpuState.SetFlag(Cpu.Flags.DecimalMode, false);
-            cpuState.p++;
-            return 2;
         }
     }
 }

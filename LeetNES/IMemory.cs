@@ -4,7 +4,7 @@ namespace LeetNES
 {
     public interface IMemory
     {
-        byte this[ushort addr] { get; set; }
+        byte this[int addr] { get; set; }
         void SetCartridge(ICartridge cartridge);
     }
 }

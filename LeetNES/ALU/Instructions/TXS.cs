@@ -1,24 +1,30 @@
+using System.Collections.Generic;
+
 namespace LeetNES.ALU.Instructions
 {
-    public class TXS : ImpliedInstruction
+    public class TXS : BaseInstruction
     {
-        public override byte OpCode
-        {
-            get { return 0x9A; }
-        }
-
         public override string Mnemonic
         {
             get { return "TXS"; }
         }
 
-        public override int Execute(Cpu.State cpuState, IMemory memory)
+        public override IDictionary<byte, AddressingMode> Variants
         {
-            cpuState.s = cpuState.x;
-            cpuState.SetFlag(Cpu.Flags.Negative, 0x7000 & cpuState.s);
-            cpuState.SetFlag(Cpu.Flags.Zero, cpuState.s == 0);
-            cpuState.p += 1;
-            return 2;
+            get 
+            { 
+                return new Dictionary<byte, AddressingMode>
+                {
+                    { 0x9A, AddressingMode.Implied }
+                }; 
+            }
+        }
+
+        protected override void InternalExecute(Cpu.State cpuState, IMemory memory, byte arg, ref int cycles)
+        {
+            cpuState.Sp = cpuState.X;
+            cpuState.SetFlag(Cpu.Flags.Negative, 0x7000 & cpuState.Sp);
+            cpuState.SetFlag(Cpu.Flags.Zero, cpuState.Sp == 0);
         }
     }
 }

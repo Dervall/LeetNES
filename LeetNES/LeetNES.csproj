@@ -47,13 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ALU\Instructions\ImpliedInstruction.cs" />
     <Compile Include="ALU\Instructions\AddressingMode.cs" />
+    <Compile Include="ALU\Instructions\BaseInstruction.cs" />
     <Compile Include="ALU\Instructions\IInstruction.cs" />
-    <Compile Include="ALU\Instructions\ImmediateInstruction.cs" />
     <Compile Include="ALU\Instructions\InstructionExtensions.cs" />
     <Compile Include="ALU\Instructions\CLD.cs" />
-    <Compile Include="ALU\Instructions\LDXImmediate.cs" />
+    <Compile Include="ALU\Instructions\LDA.cs" />
+    <Compile Include="ALU\Instructions\LDX.cs" />
     <Compile Include="MemoryExtensions.cs" />
     <Compile Include="ALU\Instructions\SEI.cs" />
     <Compile Include="ALU\Instructions\TXS.cs" />

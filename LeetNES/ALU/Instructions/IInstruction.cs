@@ -1,11 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
+
 namespace LeetNES.ALU.Instructions
 {
     public interface IInstruction
     {        
-        byte OpCode { get; }
         string Mnemonic { get; }
-        int Size { get; }
-        AddressingMode AddressingMode { get; }
+        IDictionary<byte, AddressingMode> Variants { get; }
 
         int Execute(Cpu.State cpuState, IMemory memory);
     }

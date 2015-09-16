@@ -1,3 +1,5 @@
+using LeetNES.ALU;
+
 namespace LeetNES
 {
     public class Emulator : IEmulator

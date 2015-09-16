@@ -1,0 +1,52 @@
+using System.Collections.Generic;
+
+namespace LeetNES.ALU.Instructions
+{
+    /// LDA  Load Accumulator with Memory
+    ///
+    /// M -> A                           N Z C I D V
+    ///                                  + + - - - -
+    ///
+    /// addressing    assembler    opc  bytes  cyles
+    /// --------------------------------------------
+    /// immidiate     LDA #oper     A9    2     2
+    /// zeropage      LDA oper      A5    2     3
+    /// zeropage,X    LDA oper,X    B5    2     4
+    /// absolute      LDA oper      AD    3     4
+    /// absolute,X    LDA oper,X    BD    3     4*
+    /// absolute,Y    LDA oper,Y    B9    3     4*
+    /// (indirect,X)  LDA (oper,X)  A1    2     6
+    /// (indirect),Y  LDA (oper),Y  B1    2     5*
+    ///
+    public class LDA : BaseInstruction
+    {
+        public override string Mnemonic
+        {
+            get { return "LDA"; }
+        }
+
+        public override IDictionary<byte, AddressingMode> Variants
+        {
+            get
+            {
+                return new Dictionary<byte, AddressingMode> {
+                    { 0xA9, AddressingMode.Immediate },
+                    { 0xA5, AddressingMode.ZeroPage },
+                    { 0xB5, AddressingMode.ZeroPageXIndexed },
+                    { 0xAD, AddressingMode.Absolute },
+                    { 0xBD, AddressingMode.AbsoluteX },
+                    { 0xB9, AddressingMode.AbsoluteY },
+                    { 0xA1, AddressingMode.XIndexedIndirect },
+                    { 0xB1, AddressingMode.IndirectYIndexed },
+                };
+            }
+        }
+
+        protected override void InternalExecute(Cpu.State cpuState, IMemory memory, byte arg, ref int cycles)
+        {
+            cpuState.A = arg;
+            cpuState.SetFlag(Cpu.Flags.Negative, 0x7000 & arg);
+            cpuState.SetFlag(Cpu.Flags.Zero, arg == 0);
+        }
+    }
+}

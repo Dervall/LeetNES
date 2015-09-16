@@ -22,12 +22,12 @@ namespace LeetNES.ALU
 
         public class State
         {
-            public ushort p;
-            public byte a;
-            public byte x;
-            public byte y;
-            public byte flags;
-            public byte s;
+            public ushort Pc;
+            public byte A;
+            public byte X;
+            public byte Y;
+            public byte StatusRegister;
+            public byte Sp;
 
             public void SetFlag(Flags flag, int i)
             {
@@ -37,9 +37,9 @@ namespace LeetNES.ALU
             public void SetFlag(Flags flag, bool b)
             {
                 if (b)
-                    flags |= (byte)flag;
+                    StatusRegister |= (byte)flag;
                 else
-                    flags &= (byte)~flag;
+                    StatusRegister &= (byte)~flag;
             }
         }
 
@@ -51,38 +51,52 @@ namespace LeetNES.ALU
         {
             this.mem = mem;
             state = new State();
-            this.instructions = instructions.ToDictionary(f => f.OpCode, f => f);
+            this.instructions = new Dictionary<byte, IInstruction>();
+            foreach (var instruction in instructions)
+            {
+                foreach (var opCode in instruction.Variants.Select(x => x.Key))
+                {
+                    this.instructions.Add(opCode, instruction);
+                }
+            }
         }
 
         public int Step()
         {
-            byte opCode = mem[state.p];
+            byte opCode = mem[state.Pc];
             IInstruction instruction;
             if (!instructions.TryGetValue(opCode, out instruction))
             {
                 throw new Exception("Unknown instruction " + opCode.ToString("X") + " encountered.");
             }
 
-            Console.WriteLine("{0:X2}  {1,-10}{2,-32}A:{3:X2} X:{4:X2} Y:{5:X2} P:{6:X2} SP:{7:X2}", // TODO: Cycle and scanline goes at the end
-                state.p, 
-                string.Join(" ", mem.SequenceFrom(state.p).Take(instruction.Size).Select(x => x.ToString("X2"))), 
-                instruction.Disassemble(mem.SequenceFrom((ushort)(state.p + 1)).Take(instruction.Size - 1).ToArray()),
-                state.a,
-                state.x,
-                state.y,
-                state.flags,
-                state.s);
+            LogInstruction(instruction, opCode);
 
             var instructionTime = instruction.Execute(state, mem);
             cycle += instructionTime;
             return instructionTime;
         }
 
+        private void LogInstruction(IInstruction instruction, byte opCode)
+        {
+            var instructionSize = instruction.Variants[opCode].InstructionSize();
+            var instructionBytes = mem.SequenceFrom(state.Pc).Take(instructionSize).ToArray();
+            Console.WriteLine("{0:X2}  {1,-10}{2,-32}A:{3:X2} X:{4:X2} Y:{5:X2} P:{6:X2} SP:{7:X2}", // TODO: Cycle and scanline goes at the end
+                state.Pc,
+                string.Join(" ", instructionBytes.Select(x => x.ToString("X2"))),
+                instruction.Disassemble(instructionBytes),
+                state.A,
+                state.X,
+                state.Y,
+                state.StatusRegister,
+                state.Sp);
+        }
+
         public void Reset()
         {
-            state.a = state.x = state.y = state.s = 0;
-            state.p = (ushort) ((mem[0xFFFD] << 8) | mem[0xFFFC]);
-            state.flags = 1 << 5;
+            state.A = state.X = state.Y = state.Sp = 0;
+            state.Pc = (ushort) ((mem[0xFFFD] << 8) | mem[0xFFFC]);
+            state.StatusRegister = 1 << 5;
             cycle = 0;
         }
     }

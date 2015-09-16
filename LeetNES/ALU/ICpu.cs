@@ -1,4 +1,4 @@
-﻿namespace LeetNES
+﻿namespace LeetNES.ALU
 {
     public interface ICpu
     {
