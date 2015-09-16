@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace LeetNES.ALU.Instructions
 {
+    /// <summary>
     /// LDA  Load Accumulator with Memory
     ///
     /// M -> A                           N Z C I D V
@@ -17,7 +18,7 @@ namespace LeetNES.ALU.Instructions
     /// absolute,Y    LDA oper,Y    B9    3     4*
     /// (indirect,X)  LDA (oper,X)  A1    2     6
     /// (indirect),Y  LDA (oper),Y  B1    2     5*
-    ///
+    /// </summary>
     public class LDA : BaseInstruction
     {
         public override string Mnemonic

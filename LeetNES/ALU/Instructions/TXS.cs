@@ -2,6 +2,16 @@ using System.Collections.Generic;
 
 namespace LeetNES.ALU.Instructions
 {
+    /// <summary>
+    /// TXS  Transfer Index X to Stack Register
+    ///
+    /// X -> SP                          N Z C I D V
+    ///                                  + + - - - -
+    ///
+    /// addressing    assembler    opc  bytes  cyles
+    /// --------------------------------------------
+    /// implied       TXS           9A    1     2
+    /// </summary>
     public class TXS : BaseInstruction
     {
         public override string Mnemonic

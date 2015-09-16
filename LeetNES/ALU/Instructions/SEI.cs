@@ -2,7 +2,8 @@ using System.Collections.Generic;
 
 namespace LeetNES.ALU.Instructions
 {
-    /// SEI  Set Interrupt Disable Status
+    /// <summary>
+    ///  SEI  Set Interrupt Disable Status
     ///
     /// 1 -> I                           N Z C I D V
     ///                                  - - - 1 - -
@@ -10,7 +11,7 @@ namespace LeetNES.ALU.Instructions
     /// addressing    assembler    opc  bytes  cyles
     /// --------------------------------------------
     /// implied       SEI           78    1     2
-    ///
+    /// </summary>
     public class SEI : BaseInstruction
     {        
         public override string Mnemonic
