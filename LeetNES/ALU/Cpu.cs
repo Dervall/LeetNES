@@ -41,6 +41,11 @@ namespace LeetNES.ALU
                 else
                     StatusRegister &= (byte)~flag;
             }
+
+            public bool IsFlagSet(Flags flag)
+            {
+                return (StatusRegister & (byte) flag) != 0;
+            }
         }
 
         private int cycle;
@@ -67,7 +72,7 @@ namespace LeetNES.ALU
             IInstruction instruction;
             if (!instructions.TryGetValue(opCode, out instruction))
             {
-                throw new Exception("Unknown instruction " + opCode.ToString("X") + " encountered.");
+                throw new Exception(string.Format("Unknown instruction {0:X2} encountered at {1:X4}.", opCode, state.Pc));
             }
 
             LogInstruction(instruction, opCode);

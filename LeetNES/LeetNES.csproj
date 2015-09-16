@@ -48,10 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ALU\Instructions\AddressingMode.cs" />
+    <Compile Include="ALU\Instructions\BaseBranchInstruction.cs" />
     <Compile Include="ALU\Instructions\BaseInstruction.cs" />
+    <Compile Include="ALU\Instructions\BPL.cs" />
     <Compile Include="ALU\Instructions\IInstruction.cs" />
     <Compile Include="ALU\Instructions\InstructionExtensions.cs" />
     <Compile Include="ALU\Instructions\CLD.cs" />
+    <Compile Include="ALU\Instructions\JMP.cs" />
     <Compile Include="ALU\Instructions\LDA.cs" />
     <Compile Include="ALU\Instructions\LDX.cs" />
     <Compile Include="MemoryExtensions.cs" />
