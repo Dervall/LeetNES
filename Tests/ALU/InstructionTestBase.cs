@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using LeetNES;
 using LeetNES.ALU;
 using LeetNES.ALU.Instructions;

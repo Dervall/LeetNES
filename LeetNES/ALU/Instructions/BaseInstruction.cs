@@ -36,6 +36,10 @@ namespace LeetNES.ALU.Instructions
                     arg = memory[(memory[cpuState.Pc + 1] + cpuState.X) & 0xFF];
                     cycles = 4;
                     break;
+                case AddressingMode.ZeroPageYIndexed:
+                    arg = memory[(memory[cpuState.Pc + 1] + cpuState.Y) & 0xFF];
+                    cycles = 4;
+                    break;
                 case AddressingMode.AbsoluteX:
                     arg = GetAbsoluteOffsetArg(cpuState, memory, cpuState.X, out cycles);
                     break;
