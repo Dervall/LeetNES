@@ -7,55 +7,15 @@ namespace LeetNES.ALU
 {
     public class Cpu : ICpu
     {
-        public enum Flags
-        {
-            Carry = 1,
-            Zero = 1 << 1,
-            InterruptDisable = 1 << 2,
-            DecimalMode = 1 << 3,
-            Break = 1 << 4,
-            Overflow = 1 << 6,
-            Negative = 1 << 7
-        }
-
         private readonly IMemory mem;
-
-        public class State
-        {
-            public ushort Pc;
-            public byte A;
-            public byte X;
-            public byte Y;
-            public byte StatusRegister;
-            public byte Sp;
-
-            public void SetFlag(Flags flag, int i)
-            {
-                SetFlag(flag, i != 0);                
-            }
-
-            public void SetFlag(Flags flag, bool b)
-            {
-                if (b)
-                    StatusRegister |= (byte)flag;
-                else
-                    StatusRegister &= (byte)~flag;
-            }
-
-            public bool IsFlagSet(Flags flag)
-            {
-                return (StatusRegister & (byte) flag) != 0;
-            }
-        }
-
         private int cycle;
-        private readonly State state;
+        private readonly CpuState state;
         private readonly Dictionary<byte, IInstruction> instructions;
 
         public Cpu(IMemory mem, IEnumerable<IInstruction> instructions)
         {
             this.mem = mem;
-            state = new State();
+            state = new CpuState();
             this.instructions = new Dictionary<byte, IInstruction>();
             foreach (var instruction in instructions)
             {

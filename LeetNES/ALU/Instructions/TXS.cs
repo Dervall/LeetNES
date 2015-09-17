@@ -30,11 +30,11 @@ namespace LeetNES.ALU.Instructions
             }
         }
 
-        protected override void InternalExecute(Cpu.State cpuState, IMemory memory, byte arg, ref int cycles)
+        protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, ref int cycles)
         {
             cpuState.Sp = cpuState.X;
-            cpuState.SetFlag(Cpu.Flags.Negative, 0x7000 & cpuState.Sp);
-            cpuState.SetFlag(Cpu.Flags.Zero, cpuState.Sp == 0);
+            cpuState.SetNegativeFlag(cpuState.Sp);
+            cpuState.SetZeroFlag(cpuState.Sp);
         }
     }
 }

@@ -27,9 +27,9 @@ namespace LeetNES.ALU.Instructions
             }
         }
 
-        protected override void InternalExecute(Cpu.State cpuState, IMemory memory, byte arg, ref int cycles)
+        protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, ref int cycles)
         {
-            cpuState.SetFlag(Cpu.Flags.DecimalMode, false);
+            cpuState.SetFlag(CpuState.Flags.DecimalMode, false);
         }
     }
 }

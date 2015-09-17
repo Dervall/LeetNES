@@ -21,7 +21,7 @@ namespace LeetNES.ALU.Instructions
             }
         }
 
-        public int Execute(Cpu.State cpuState, IMemory memory)
+        public int Execute(CpuState cpuState, IMemory memory)
         {
             if (ShouldBranch(cpuState, memory))
             {
@@ -53,6 +53,6 @@ namespace LeetNES.ALU.Instructions
             return 2;
         }
 
-        protected abstract bool ShouldBranch(Cpu.State cpuState, IMemory memory);
+        protected abstract bool ShouldBranch(CpuState cpuState, IMemory memory);
     }
 }

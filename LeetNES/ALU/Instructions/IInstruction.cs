@@ -8,6 +8,6 @@ namespace LeetNES.ALU.Instructions
         string Mnemonic { get; }
         IDictionary<byte, AddressingMode> Variants { get; }
 
-        int Execute(Cpu.State cpuState, IMemory memory);
+        int Execute(CpuState cpuState, IMemory memory);
     }
 }

@@ -29,7 +29,7 @@ namespace LeetNES.ALU.Instructions
             }
         }
 
-        public int Execute(Cpu.State cpuState, IMemory memory)
+        public int Execute(CpuState cpuState, IMemory memory)
         {
             int cycles = 3;
             ushort dest = memory.ReadShort(cpuState.Pc + 1);

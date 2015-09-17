@@ -22,9 +22,9 @@ namespace LeetNES.ALU.Instructions
             get { return 0x10; }
         }
 
-        protected override bool ShouldBranch(Cpu.State cpuState, IMemory memory)
+        protected override bool ShouldBranch(CpuState cpuState, IMemory memory)
         {
-            return !cpuState.IsFlagSet(Cpu.Flags.Negative);
+            return !cpuState.IsFlagSet(CpuState.Flags.Negative);
         }
     }
 }
