@@ -47,10 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ALU\Instructions\ADC.cs" />
     <Compile Include="ALU\CpuState.cs" />
     <Compile Include="ALU\Instructions\AddressingMode.cs" />
+    <Compile Include="ALU\Instructions\AND.cs" />
+    <Compile Include="ALU\Instructions\ASL.cs" />
     <Compile Include="ALU\Instructions\BaseBranchInstruction.cs" />
     <Compile Include="ALU\Instructions\BaseInstruction.cs" />
+    <Compile Include="ALU\Instructions\BCC.cs" />
+    <Compile Include="ALU\Instructions\BCS.cs" />
+    <Compile Include="ALU\Instructions\BEQ.cs" />
     <Compile Include="ALU\Instructions\BPL.cs" />
     <Compile Include="ALU\Instructions\IInstruction.cs" />
     <Compile Include="ALU\Instructions\InstructionExtensions.cs" />

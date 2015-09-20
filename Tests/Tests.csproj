@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ALU\BranchInstructionTestBase.cs" />
     <Compile Include="ALU\InstructionTestBase.cs" />
+    <Compile Include="ALU\TestADC.cs" />
     <Compile Include="ALU\TestBPL.cs" />
     <Compile Include="ALU\TestCLD.cs" />
     <Compile Include="ALU\TestJMP.cs" />

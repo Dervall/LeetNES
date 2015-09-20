@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace LeetNES.ALU.Instructions
@@ -30,7 +31,7 @@ namespace LeetNES.ALU.Instructions
             }
         }
 
-        protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, ref int cycles)
+        protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
         {
             cpuState.SetFlag(CpuState.Flags.InterruptDisable, true);
         }
