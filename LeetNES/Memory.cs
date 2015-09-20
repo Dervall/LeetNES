@@ -6,16 +6,12 @@ namespace LeetNES
     {
         private ICartridge cartridge;
         private readonly byte[] ram;
-        private byte PPU_Status_Register = 0x80; //vblank
-        private byte spriteAddress;
-        private byte[] sprite;
         private IPpu ppu;
 
         public Memory(IPpu ppu)
         {
             this.ppu = ppu;
             ram = new byte[ushort.MaxValue];
-            sprite = new byte[0x100];
         }
 
         public void SetCartridge(ICartridge cartridge)
@@ -35,23 +31,24 @@ namespace LeetNES
                 
                 if (addr < 0x4000)
                 {
-                    // Registers
-                    if (addr == 0x2002 /*ppu status*/)
-                    {
+                    return ppu.StolenRead((ushort) (addr ));
+               ///*     // Registers
+               //     if (addr == 0x2002 /*ppu status*/)
+               //     {
                         
-                        return ppu.StatusRegRead(); 
+               //         return ppu.StatusRegRead(); 
 
-                    }
-                    if (addr == 0x2004)
-                    {
-                        return ppu.SpriteIORead();
-                    }
-                    if (addr == 0x2007)
-                    {
-                        return ppu.VRAMNametableRead();
-                    }
-                    // TODO
-                    return 0;
+               //     }
+               //     if (addr == 0x2004)
+               //     {
+               //         return ppu.SpriteIORead();
+               //     }
+               //     if (addr == 0x2007)
+               //     {
+               //         return ppu.VRAMNametableRead();
+               //     }
+               //     // TODO
+               //     return 0;*/
                 }
                 if (addr < 0x6000)
                 {
@@ -77,7 +74,8 @@ namespace LeetNES
                 }
                 else if (addr < 0x4000)
                 {
-                    switch (addr)
+                    ppu.StolenWrite((ushort)(addr & 0xFFFF), value);
+                    /*         switch (addr)
                     {
                         case 0x2000:
                             ppu.CtrlReg1Write((byte)addr);
@@ -100,8 +98,8 @@ namespace LeetNES
                         case 0x2007:
                             ppu.VRAMNametableWrite((byte)addr);
                             break;
-                    }
-                    
+                    }*/
+
                 }
                 else if (addr < 0x4020)
                 {

@@ -19,6 +19,7 @@ namespace LeetNES
         private readonly ICpu cpu;
         private readonly ICartridge _cartridge;
         private readonly IMemory _memory;
+        private readonly IPresenter presenter;
 
         private bool oddFrame;
         private int write_toggle;
@@ -149,7 +150,7 @@ namespace LeetNES
                 if (color_index == 3) pixelColor = 0xFF0000FF;
             }
 
-            _memory[256*py + px] = Convert.ToByte(pixelColor);
+            presenter.SetPixel(px, py, pixelColor);
         }
 
         private readonly byte[] oam_temp = new byte[8];
@@ -325,13 +326,15 @@ namespace LeetNES
 
         #endregion
 
-        public StolenPpu(ICpu cpu, ICartridge cartridge, IMemory memory)
+        public StolenPpu(ICpu cpu, ICartridge cartridge, IMemory memory, IPresenter presenter)
         {
             this.cpu = cpu;
             _cartridge = cartridge;
             _memory = memory;
+            this.presenter = presenter;
             for (int i = 0; i < 0x4000; ++i)
                 RAM[i] = 0;
+            coldBoot();
         }
 
         public void render_step()
@@ -372,8 +375,12 @@ namespace LeetNES
                 _PPUSTATUS |= 0x80;
 
                 // Potentially trigger NMI at the start of VBlank
-                //if ((byte)(_PPUCTRL & 0x80) != 0)
-                //    cpu.cpu.nmi = true;
+                if ((byte) (_PPUCTRL & 0x80) != 0)
+                {
+                    cpu.Nmi();
+                    presenter.Flip();
+                }
+                    
             }
 
             x++;
@@ -417,11 +424,13 @@ namespace LeetNES
         // Abstract grabbing data from the pattern tables since it could either be in VRAM, or directly mapped to CHR-ROM via the mapper
         private byte getPatternTable(ushort address)
         {
-            //if (true && cpu.mapper.mapsCHR() && cpu.cartridge.CHRROM_8KBankCount > 0)
-            //{
-            //    return cpu.mapper.readCHR(address);
-            //}
-            return readRAM(address);
+          //  if (true && _cartridge.ReadChrMem() && cpu.cartridge.CHRROM_8KBankCount > 0)
+            {
+                return _cartridge.ReadChrMem(address);
+            }
+
+
+            //return readRAM(address);
         }
 
         private byte readRAM(ushort addr)

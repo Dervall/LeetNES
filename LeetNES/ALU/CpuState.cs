@@ -50,18 +50,18 @@ namespace LeetNES.ALU
 
         public void PushStack(byte b, IMemory memory)
         {
-            memory[Sp--] = b;
+            memory[0x100 + --Sp] = b;
         }
 
         public byte PopStack(IMemory memory)
         {
-            return memory[++Sp];
+            return memory[0x100 + Sp++];
         }
 
         public void Interrupt(int interruptAddress, IMemory mem)
         {
-            PushStack((byte)(Pc >> 8), mem);
             PushStack((byte)(Pc & 0xFF), mem);
+            PushStack((byte)(Pc >> 8), mem);
             PushStack(StatusRegister, mem);
             SetFlag(Flags.InterruptDisable, true);
             Pc = mem.ReadShort(interruptAddress);

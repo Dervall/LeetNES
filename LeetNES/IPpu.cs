@@ -19,6 +19,9 @@ namespace LeetNES
         void VRAMReg2Write(byte data);
         byte StatusRegRead();
         byte SpriteIORead();
+
+        byte StolenRead(ushort addr);
+        void StolenWrite(ushort addr, byte val);
     }
 
     public enum MirrorMode
@@ -76,20 +79,26 @@ namespace LeetNES
             spriteRam = new byte[256];
             //Todo: Allow setting of mirrormode
             this.mirrorMode = MirrorMode.Vertical;
+            
         }
 
         public void Step(int ppuCycles)
         {
-            if (currentScanline == -1 && x == 0)
+            for(int i = 0; i < ppuCycles; ++i)
+                _ppu.Value.step();
+       /*     if (currentScanline == -1 && x == 0)
             {
                 inVblank = false;
                 sprite0Hit = false;
             }
 
-            _ppu.Value.drawBackground(x, currentScanline);
-            
+            if (x < 256 && currentScanline >= 0 && currentScanline <= 240)
+            {
+                _ppu.Value.drawBackground(x, currentScanline);
+            }
             // Render goes here
 
+            ++x;
             // 241 starts the VBlank region.
             if (currentScanline == 241 && x == 1)
             {
@@ -116,7 +125,7 @@ namespace LeetNES
             {
                 currentScanline = -1;
                 oddFrame = !oddFrame;
-            }
+            }*/
         }
 
         #region registers
@@ -127,6 +136,17 @@ namespace LeetNES
         {
             return spriteRam[spriteAddr];
         }
+
+        public byte StolenRead(ushort addr)
+        {
+            return _ppu.Value.read(addr);
+        }
+
+        public void StolenWrite(ushort addr, byte val)
+        {
+            _ppu.Value.write(addr, val);
+        }
+
         public byte StatusRegRead()
         {
             byte returnedValue = 0;
@@ -370,23 +390,23 @@ namespace LeetNES
 
         public void VRAMReg2Write(byte data)
         {
-        if (vramHiLoToggle == 1)
-        {
-            prev_vramAddr = vramAddr;
-            vramAddr = data << 8;
-            vramHiLoToggle = 0;
-        }
-        else
-        {
-            vramAddr = vramAddr + data;
-            if ((prev_vramAddr == 0) && (currentScanline < 240))
+            if (vramHiLoToggle == 1)
             {
-                if ((vramAddr >= 0x2000) && (vramAddr <= 0x2400))
-                    scrollH = (byte)(((vramAddr - 0x2000) / 0x20) * 8 - currentScanline);
+                prev_vramAddr = vramAddr;
+                vramAddr = data << 8;
+                vramHiLoToggle = 0;
             }
-            vramHiLoToggle = 1;
+            else
+            {
+                vramAddr = vramAddr + data;
+                if ((prev_vramAddr == 0) && (currentScanline < 240))
+                {
+                    if ((vramAddr >= 0x2000) && (vramAddr <= 0x2400))
+                        scrollH = (byte)(((vramAddr - 0x2000) / 0x20) * 8 - currentScanline);
+                }
+                vramHiLoToggle = 1;
+            }
         }
-    }
 
       
         #endregion

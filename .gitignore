@@ -175,6 +175,9 @@ UpgradeLog*.htm
 *.mdf
 *.ldf
 
+#ROMS
+*.nes
+
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout

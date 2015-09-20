@@ -27,7 +27,7 @@ namespace LeetNESEmulator
                     var emulator = container.Resolve<IEmulator>();
                     var memory = container.Resolve<IMemory>();
                     // ReSharper restore AccessToDisposedClosure
-                    memory.SetCartridge(new Cartridge("../../../LeetNES/roms/nestest.nes"));
+                    memory.SetCartridge(container.Resolve<ICartridge>());
                     emulator.Reset();
                     for (;;)
                     {
@@ -45,12 +45,19 @@ namespace LeetNESEmulator
             builder.RegisterInstance(mainForm).As<IPresenter>();
 
             builder.RegisterType<Cpu>().As<ICpu>().SingleInstance();
-            builder.RegisterType<Emulator>().As<IEmulator>();
+            builder.RegisterType<Emulator>().As<IEmulator>().SingleInstance();
             builder.RegisterType<Memory>().As<IMemory>().SingleInstance();
-            builder.RegisterType<Ppu>().As<IPpu>();
+            builder.RegisterType<Ppu>().As<IPpu>().SingleInstance();
             builder.RegisterType<StolenPpu>();
 
-            var instructionTypes = Assembly.GetExecutingAssembly().GetTypes().Where(f => typeof(IInstruction).IsAssignableFrom(f) && !f.IsAbstract).ToArray();
+
+
+            var cartridge = new Cartridge("../../../LeetNES/roms/nestest.nes");
+            //var cartridge = new Cartridge("../../../LeetNES/roms/Donkey Kong (JU).nes");
+
+            builder.RegisterInstance(cartridge).As<ICartridge>();
+
+            var instructionTypes = typeof(IInstruction).Assembly.GetTypes().Where(f => typeof(IInstruction).IsAssignableFrom(f) && !f.IsAbstract).ToArray();
             builder.RegisterTypes(instructionTypes).As<IInstruction>();
                 
 

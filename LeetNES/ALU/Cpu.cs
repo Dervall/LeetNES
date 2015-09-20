@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using LeetNES.ALU.Instructions;
 
@@ -24,6 +26,7 @@ namespace LeetNES.ALU
                     this.instructions.Add(opCode, instruction);
                 }
             }
+            File.WriteAllBytes("log.txt", new byte[0]);
         }
 
         public int Step()
@@ -47,7 +50,8 @@ namespace LeetNES.ALU
              
             var instructionSize = instruction.Variants[opCode].InstructionSize();
             var instructionBytes = mem.SequenceFrom(state.Pc).Take(instructionSize).ToArray();
-            Console.WriteLine("{0:X2}  {1,-10}{2,-32}A:{3:X2} X:{4:X2} Y:{5:X2} P:{6:X2} SP:{7:X2}", // TODO: Cycle and scanline goes at the end
+            File.AppendAllText("log.txt",
+           String.Format("{0:X2}  {1,-10}{2,-32}A:{3:X2} X:{4:X2} Y:{5:X2} P:{6:X2} SP:{7:X2} CYC:{8,-3}\n", // TODO: Cycle and scanline goes at the end
                 state.Pc,
                 string.Join(" ", instructionBytes.Select(x => x.ToString("X2"))),
                 instruction.Disassemble(instructionBytes),
@@ -55,7 +59,8 @@ namespace LeetNES.ALU
                 state.X,
                 state.Y,
                 state.StatusRegister,
-                state.Sp);
+                state.Sp,
+                cycle * 3));
         }
 
         public void Reset()

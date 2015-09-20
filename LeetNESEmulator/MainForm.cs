@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using LeetNES;
 
 namespace LeetNESEmulator
 {
     public partial class MainForm : Form, IPresenter
     {
-        private readonly Bitmap _surface = new Bitmap(256, 240);
+        private readonly Bitmap _surface = new Bitmap(257, 241);
 
         public MainForm()
         {
@@ -18,14 +19,16 @@ namespace LeetNESEmulator
                 true);
         }
 
-        public void SetPixel(int pixelX, int pixelY, int paletteIndex)
+        public void SetPixel(int pixelX, int pixelY, uint c)
         {
-            Invoke(new Action(() =>
-            {
-                // Slow as a dog, but fix later.
-                _surface.SetPixel(pixelX, pixelY, Color.Red);
-                Invalidate(new Rectangle(pixelX, pixelY, 1, 1));    
-            }));
+            // Slow as a dog, but fix later.
+            var color = Color.FromArgb((int) ((c  >> 24) & 0xFF), (int) ((c >> 16) & 0xFF), (int) ((c >> 8) & 0xFF)); 
+            _surface.SetPixel(pixelX, pixelY, color);
+        }
+
+        public void Flip()
+        {
+            Invoke(new Action(Invalidate));
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)

@@ -12,25 +12,26 @@ namespace LeetNES.ALU.Instructions
      --------------------------------------------
      implied       RTI           40    1     6
      */
-    public class RTI : BaseInstruction
+    public class RTI : IInstruction
     {
-        public override string Mnemonic
+        public string Mnemonic
         {
             get { return "RTI"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public IDictionary<byte, AddressingMode> Variants
         {
             get { return new Dictionary<byte, AddressingMode>{{0x40, AddressingMode.Implied}}; }
         }
 
-        protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
+        public int Execute(CpuState cpuState, IMemory memory)
         {
             cpuState.StatusRegister = cpuState.PopStack(memory);
-            cpuState.Pc = 0;
-            cpuState.Pc = cpuState.PopStack(memory);
-            cpuState.Pc |= (ushort)(cpuState.PopStack(memory) << 8);
-            cycles = 6;
+            var high = cpuState.PopStack(memory);
+            var low = cpuState.PopStack(memory);
+            cpuState.Pc = (ushort)((high << 8) | low);
+
+            return 6;
         }
     }
 }
