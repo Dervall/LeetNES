@@ -67,6 +67,12 @@
     <Compile Include="ALU\Instructions\CLC.cs" />
     <Compile Include="ALU\Instructions\CLI.cs" />
     <Compile Include="ALU\Instructions\CLV.cs" />
+    <Compile Include="ALU\Instructions\CMP.cs" />
+    <Compile Include="ALU\Instructions\CPX.cs" />
+    <Compile Include="ALU\Instructions\CPY.cs" />
+    <Compile Include="ALU\Instructions\DEC.cs" />
+    <Compile Include="ALU\Instructions\DEX.cs" />
+    <Compile Include="ALU\Instructions\DEY.cs" />
     <Compile Include="ALU\Instructions\IInstruction.cs" />
     <Compile Include="ALU\Instructions\InstructionExtensions.cs" />
     <Compile Include="ALU\Instructions\CLD.cs" />
