@@ -73,9 +73,13 @@
     <Compile Include="ALU\Instructions\DEC.cs" />
     <Compile Include="ALU\Instructions\DEX.cs" />
     <Compile Include="ALU\Instructions\DEY.cs" />
+    <Compile Include="ALU\Instructions\EOR.cs" />
     <Compile Include="ALU\Instructions\IInstruction.cs" />
+    <Compile Include="ALU\Instructions\INC.cs" />
     <Compile Include="ALU\Instructions\InstructionExtensions.cs" />
     <Compile Include="ALU\Instructions\CLD.cs" />
+    <Compile Include="ALU\Instructions\INX.cs" />
+    <Compile Include="ALU\Instructions\INY.cs" />
     <Compile Include="ALU\Instructions\JMP.cs" />
     <Compile Include="ALU\Instructions\LDA.cs" />
     <Compile Include="ALU\Instructions\LDX.cs" />
