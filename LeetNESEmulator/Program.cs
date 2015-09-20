@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autofac;
+using LeetNES;
+using LeetNES.ALU;
+using LeetNES.ALU.Instructions;
 using LeetNESEmulator.Input;
 
 namespace LeetNESEmulator
@@ -15,9 +21,19 @@ namespace LeetNESEmulator
             var mainForm = new MainForm();
             using (var container = ConfigureApplication(mainForm))
             {
-                // Test code.
-                var input = container.Resolve<IInputSource>();
-
+                Task.Factory.StartNew(() =>
+                {
+                    // ReSharper disable AccessToDisposedClosure
+                    var emulator = container.Resolve<IEmulator>();
+                    var memory = container.Resolve<IMemory>();
+                    // ReSharper restore AccessToDisposedClosure
+                    memory.SetCartridge(new Cartridge("../../../LeetNES/roms/nestest.nes"));
+                    emulator.Reset();
+                    for (;;)
+                    {
+                        emulator.Step();
+                    }    
+                }, TaskCreationOptions.LongRunning);
                 Application.Run(mainForm);
             }
         }
@@ -27,6 +43,16 @@ namespace LeetNESEmulator
             var builder = new ContainerBuilder();
             builder.RegisterType<InputSource>().As<IInputSource>().SingleInstance();
             builder.RegisterInstance(mainForm).As<IPresenter>();
+
+            builder.RegisterType<Cpu>().As<ICpu>().SingleInstance();
+            builder.RegisterType<Emulator>().As<IEmulator>();
+            builder.RegisterType<Memory>().As<IMemory>().SingleInstance();
+            builder.RegisterType<Ppu>().As<IPpu>();
+
+            var instructionTypes = Assembly.GetExecutingAssembly().GetTypes().Where(f => typeof(IInstruction).IsAssignableFrom(f) && !f.IsAbstract).ToArray();
+            builder.RegisterTypes(instructionTypes).As<IInstruction>();
+                
+
             return builder.Build();
         }
     }
