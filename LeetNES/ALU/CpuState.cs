@@ -47,5 +47,15 @@ namespace LeetNES.ALU
         {
             return (StatusRegister & (byte)flag) != 0;
         }
+
+        public void PushStack(byte b, IMemory memory)
+        {
+            memory[Sp--] = b;
+        }
+
+        public byte PopStack(IMemory memory)
+        {
+            return memory[Sp++];
+        }
     }
 }
