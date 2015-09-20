@@ -44,7 +44,7 @@ namespace LeetNES.ALU
 
         private void LogInstruction(IInstruction instruction, byte opCode)
         {
-             /*
+             
             var instructionSize = instruction.Variants[opCode].InstructionSize();
             var instructionBytes = mem.SequenceFrom(state.Pc).Take(instructionSize).ToArray();
             Console.WriteLine("{0:X2}  {1,-10}{2,-32}A:{3:X2} X:{4:X2} Y:{5:X2} P:{6:X2} SP:{7:X2}", // TODO: Cycle and scanline goes at the end
@@ -55,7 +55,7 @@ namespace LeetNES.ALU
                 state.X,
                 state.Y,
                 state.StatusRegister,
-                state.Sp);*/
+                state.Sp);
         }
 
         public void Reset()
