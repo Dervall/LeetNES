@@ -19,7 +19,7 @@ namespace LeetNES
             containerBuilder.RegisterType<Cpu>().As<ICpu>().SingleInstance();
             containerBuilder.RegisterType<Emulator>().As<IEmulator>();
             containerBuilder.RegisterType<Memory>().As<IMemory>().SingleInstance();
-            containerBuilder.RegisterType<Ppu>().As<IPpu>();
+            containerBuilder.RegisterType<Ppu>().As<IPpu>().SingleInstance();
 
             var instructionTypes = Assembly.GetExecutingAssembly().GetTypes().Where(f => typeof(IInstruction).IsAssignableFrom(f) && !f.IsAbstract).ToArray();
 

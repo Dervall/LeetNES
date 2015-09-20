@@ -174,7 +174,8 @@ namespace LeetNES
 
         public void VramIOWrite(byte addr)
         {
-            throw new NotImplementedException();
+            return;
+            //throw new NotImplementedException();
         }
 
         public void VRAMNametableWrite(byte data)
