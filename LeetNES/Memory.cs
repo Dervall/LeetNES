@@ -29,7 +29,7 @@ namespace LeetNES
             {
                 if (addr < 0x2000)
                 {
-                    return ram[addr & 0x800];
+                    return ram[addr & 0x1FFF];
                 }
 
                 
