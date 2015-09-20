@@ -34,7 +34,11 @@ namespace LeetNESEmulator
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.DrawImageUnscaled(_surface, 0, 0);
+            e.Graphics.DrawImage(
+                _surface,
+                ClientRectangle,
+                new Rectangle(0, 0, _surface.Width, _surface.Height),
+                GraphicsUnit.Pixel);
         }
     }
 }
