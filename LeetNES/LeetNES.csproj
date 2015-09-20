@@ -63,6 +63,10 @@
     <Compile Include="ALU\Instructions\BPL.cs" />
     <Compile Include="ALU\Instructions\BRK.cs" />
     <Compile Include="ALU\Instructions\BVC.cs" />
+    <Compile Include="ALU\Instructions\BVS.cs" />
+    <Compile Include="ALU\Instructions\CLC.cs" />
+    <Compile Include="ALU\Instructions\CLI.cs" />
+    <Compile Include="ALU\Instructions\CLV.cs" />
     <Compile Include="ALU\Instructions\IInstruction.cs" />
     <Compile Include="ALU\Instructions\InstructionExtensions.cs" />
     <Compile Include="ALU\Instructions\CLD.cs" />
