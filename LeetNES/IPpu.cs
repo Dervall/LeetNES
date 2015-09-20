@@ -50,21 +50,7 @@ namespace LeetNES
         private int x;
         private bool oddFrame = false;
         private bool inVblank = false;
-       
-        byte _PPUCTRL;
-        byte _PPUMASK;
-        byte _PPUSTATUS;
-        ushort _PPUSCROLL;
-        ushort _PPUADDR;
-        byte _PPUDATA;
-
-        // Object Attribute Memory (OAM) is memory internal to the PPU that contains sprite 
-        // data (positions, mirroring, priority, pallete, etc.) for up to 64 sprites, each taking up 4 bytes.
-        byte _OAMDATA;
-        byte _OAMADDR;
-        byte _OAMDMA;
-
-        private uint[] _imageData = new uint[256 * 240];
+      
 
         public Ppu(Lazy<ICpu> cpu, Lazy<IMemory> memory, Lazy<StolenPpu> ppu)
         {
