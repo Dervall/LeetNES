@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LeetNES.ALU.Instructions
 {
-    public class STX : BaseInstruction
+    public class STX : BaseStoreInstruction
     {
         public override string Mnemonic
         {
@@ -23,7 +23,7 @@ namespace LeetNES.ALU.Instructions
             }
         }
 
-        protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
+        protected override void InternalExecute(CpuState cpuState, IMemory memory, Action<byte> write, ref int cycles)
         {
             write(cpuState.X);
         }

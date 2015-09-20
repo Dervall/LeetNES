@@ -48,7 +48,7 @@ namespace LeetNES
                     }
                     if (addr == 0x2007)
                     {
-                        
+                        return ppu.VRAMNametableRead();
                     }
                     // TODO
                     return 0;
