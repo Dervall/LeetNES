@@ -67,7 +67,8 @@ namespace LeetNES
         public Ppu(Lazy<ICpu> cpu)
         {
             this.cpu = cpu;
-
+            nameTables = new byte[1024];
+            spriteRam = new byte[256];
             //Todo: Allow setting of mirrormode
             this.mirrorMode = MirrorMode.Vertical;
         }
