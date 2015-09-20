@@ -19,6 +19,7 @@ namespace LeetNESEmulator
 
         public void SetPixel(int pixelX, int pixelY, int paletteIndex)
         {
+            // Invoke check..coming from emulator thread.
             // Slow as a dog, but fix later.
             _surface.SetPixel(pixelX, pixelY, Color.Red);
             Invalidate(new Rectangle(pixelX, pixelY, 1, 1));
