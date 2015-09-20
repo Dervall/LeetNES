@@ -64,5 +64,11 @@ namespace LeetNES.ALU
             state.StatusRegister = 1 << 5;
             cycle = 0;
         }
+
+        public void Nmi()
+        {
+            state.Interrupt(0xFFFA, mem);
+            cycle += 7;
+        }
     }
 }

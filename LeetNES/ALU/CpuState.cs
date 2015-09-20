@@ -57,5 +57,14 @@ namespace LeetNES.ALU
         {
             return memory[Sp++];
         }
+
+        public void Interrupt(int interruptAddress, IMemory mem)
+        {
+            PushStack((byte)(Pc >> 8), mem);
+            PushStack((byte)(Pc & 0xFF), mem);
+            PushStack(StatusRegister, mem);
+            SetFlag(Flags.InterruptDisable, true);
+            Pc = mem.ReadShort(interruptAddress);
+        }
     }
 }

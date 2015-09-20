@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace LeetNES.ALU.Instructions
 {
-    public class BRK : BaseInstruction
+    public class BRK : IInstruction
     {
-        public override string Mnemonic
+        public string Mnemonic
         {
             get { return "BRK"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public IDictionary<byte, AddressingMode> Variants
         {
             get
             {
@@ -18,9 +18,10 @@ namespace LeetNES.ALU.Instructions
             }
         }
 
-        protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
+        public int Execute(CpuState cpuState, IMemory memory)
         {
-            throw new NotImplementedException();
+            cpuState.Interrupt(0xFFFE, memory);
+            return 7;
         }
     }
 }

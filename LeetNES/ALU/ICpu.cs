@@ -4,5 +4,6 @@
     {
         int Step();
         void Reset();
+        void Nmi();
     }
 }
