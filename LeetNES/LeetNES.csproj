@@ -58,6 +58,7 @@
     <Compile Include="ALU\Instructions\JMP.cs" />
     <Compile Include="ALU\Instructions\LDA.cs" />
     <Compile Include="ALU\Instructions\LDX.cs" />
+    <Compile Include="Mappers\IMapper.cs" />
     <Compile Include="MemoryExtensions.cs" />
     <Compile Include="ALU\Instructions\SEI.cs" />
     <Compile Include="ALU\Instructions\TXS.cs" />

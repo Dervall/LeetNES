@@ -6,10 +6,16 @@ namespace LeetNES
     {
         private ICartridge cartridge;
         private readonly byte[] ram;
+        private byte PPU_Status_Register = 0x80; //vblank
+        private byte spriteAddress;
+        private byte[] sprite;
+        private IPpu ppu;
 
-        public Memory()
+        public Memory(IPpu ppu)
         {
+            this.ppu = ppu;
             ram = new byte[ushort.MaxValue];
+            sprite = new byte[0x100];
         }
 
         public void SetCartridge(ICartridge cartridge)
@@ -25,9 +31,25 @@ namespace LeetNES
                 {
                     return ram[addr & 0x800];
                 }
+
+                
                 if (addr < 0x4000)
                 {
                     // Registers
+                    if (addr == 0x2002 /*ppu status*/)
+                    {
+                        //0x80 vblank scanline hit
+                        return PPU_Status_Register; //todo: read from correct ppu state
+
+                    }
+                    if (addr == 0x2004)
+                    {
+                        return sprite[spriteAddress];
+                    }
+                    if (addr == 0x2007)
+                    {
+
+                    }
                     // TODO
                     return 0;
                 }
@@ -55,8 +77,31 @@ namespace LeetNES
                 }
                 else if (addr < 0x4000)
                 {
-                    // Registers
-                    throw new NotImplementedException();
+                    switch (addr)
+                    {
+                        case 0x2000:
+                            ppu.CtrlReg1Write(addr);
+                            break;
+                        case 0x2001:
+                            ppu.CtrlReg2Write(addr);
+                            break;
+                        case 0x2003:
+                            ppu.SpriteramRegWrite(addr);
+                            break;
+                        case 0x2004:
+                            ppu.SpriteramIOWrite(addr);
+                            break;
+                        case 0x2005:
+                            ppu.VRAMReg1Write(addr);
+                            break;
+                        case 0x2006:
+                            ppu.VRAMReg2Write(addr);
+                            break;
+                        case 0x2007:
+                            ppu.VramIOWrite(addr);
+                            break;
+                    }
+                    
                 }
                 else if (addr < 0x6000)
                 {
