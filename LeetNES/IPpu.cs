@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using LeetNES.ALU;
 
 namespace LeetNES
 {
@@ -19,6 +20,7 @@ namespace LeetNES
 
     public class Ppu : IPpu
     {
+        private readonly Lazy<ICpu> cpu;
         private bool nmiOnVblank;
         private bool _16bitSpriteSize;
         private int bgAddr;
@@ -38,14 +40,52 @@ namespace LeetNES
         private byte[] nameTables;
         private int prev_vramAddr;
         private int vramHiLoToggle;
-        private int currentScanline;
         private byte scrollH;
         private int sprite0Hit;
         private int spritesCrossed;
 
+        private int currentScanline = 0;
+        private int x;
+        private bool oddFrame = false;
+        private bool inVblank = false;
+
+        public Ppu(Lazy<ICpu> cpu)
+        {
+            this.cpu = cpu;
+        }
+
         public void Step(int ppuCycles)
         {
+            // Render goes here
 
+            // 241 starts the VBlank region.
+            if (currentScanline == 241 && x == 1)
+            {
+                // At the very start of the VBlank region, let the CPU know.
+                inVblank = true;
+
+                // Potentially trigger NMI at the start of VBlank
+                if (nmiOnVblank)
+                {
+                    cpu.Value.Nmi();
+                }
+            }
+
+            ++x;
+
+            // Variable line width for the pre-scanline depending on even/odd frame
+            int columnsThisFrame = bgVisible && oddFrame && currentScanline == -1 ? 340 : 341;
+            if (x == columnsThisFrame)
+            {
+                currentScanline++;
+                x = 0;
+            }
+
+            if (currentScanline == 261)
+            {
+                currentScanline = -1;
+                oddFrame = !oddFrame;
+            }
         }
         #region registers
 
@@ -60,7 +100,7 @@ namespace LeetNES
             byte returnedValue = 0;
 
             // VBlank
-            if (currentScanline == 240)
+            if (inVblank)
                 returnedValue = (byte)(returnedValue | 0x80);
 
             if (sprite0Hit == 1)
