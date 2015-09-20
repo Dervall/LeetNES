@@ -13,6 +13,7 @@ namespace LeetNES
         void CtrlReg2Write(byte data);
         void SpriteRegWrite(byte data);
         void SpriteIOWrite(byte data);
+        byte VRAMNametableRead();
         void VRAMNametableWrite(byte data);
         void VRAMReg1Write(byte data);
         void VRAMReg2Write(byte data);
@@ -61,6 +62,7 @@ namespace LeetNES
         private bool fix_scrolloffset2;
         private bool fix_scrolloffset1;
         private bool fix_scrolloffset3;
+        private byte vramReadBuffer;
 
         public Ppu(Lazy<ICpu> cpu)
         {
@@ -178,7 +180,34 @@ namespace LeetNES
             spriteAddr++;
         }
 
+        public byte VRAMNametableRead()
+        {
+            byte returnedValue = 0;
 
+            if (vramAddr < 0x3f00)
+            {
+                returnedValue = vramReadBuffer;
+                if (vramAddr >= 0x2000)
+                {
+                    vramReadBuffer = nameTables[vramAddr - 0x2000];
+                }
+                else
+                {
+                   // vramReadBuffer = /*Read from chrrom(vramAddr));*/
+                }
+            }
+            else if (vramAddr >= 0x4000)
+            {
+                //Bör krasha, fel mirroring
+
+            }
+            else
+            {
+                returnedValue = nameTables[vramAddr - 0x2000];
+            }
+            vramAddr = vramAddr + ppuAddrIncr;
+            return returnedValue;
+        }
 
 
         public void SpriteRegWrite(byte addr)

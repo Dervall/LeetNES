@@ -98,7 +98,7 @@ namespace LeetNES
                             ppu.VRAMReg2Write((byte)addr);
                             break;
                         case 0x2007:
-                            ppu.VramIOWrite((byte)addr);
+                            ppu.VRAMNametableWrite((byte)addr);
                             break;
                     }
                     
