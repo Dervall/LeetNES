@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Autofac;
+using LeetNESEmulator.Input;
 
 namespace LeetNESEmulator
 {
@@ -14,6 +15,9 @@ namespace LeetNESEmulator
             var mainForm = new MainForm();
             using (var container = ConfigureApplication(mainForm))
             {
+                // Test code.
+                var input = container.Resolve<IInputSource>();
+
                 Application.Run(mainForm);
             }
         }
@@ -21,6 +25,7 @@ namespace LeetNESEmulator
         private static IContainer ConfigureApplication(MainForm mainForm)
         {
             var builder = new ContainerBuilder();
+            builder.RegisterType<InputSource>().As<IInputSource>().SingleInstance();
             builder.RegisterInstance(mainForm).As<IPresenter>();
             return builder.Build();
         }

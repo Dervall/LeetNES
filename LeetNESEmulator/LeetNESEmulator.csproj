@@ -48,6 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\IHookSink.cs" />
+    <Compile Include="Input\IHookSource.cs" />
+    <Compile Include="Input\IInputSource.cs" />
+    <Compile Include="Input\InputSource.cs" />
+    <Compile Include="Input\User32.cs" />
+    <Compile Include="Input\User32Facade.cs" />
+    <Compile Include="Input\Win32HookSource.cs" />
+    <Compile Include="Input\Win32HookType.cs" />
+    <Compile Include="Input\Win32KeyboardHookStruct.cs" />
     <Compile Include="IPresenter.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -80,6 +89,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
