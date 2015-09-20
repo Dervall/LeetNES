@@ -1,143 +1,253 @@
 ﻿using System;
+using System.Net;
 
 namespace LeetNES
 {
     public interface IPpu
     {
         void Step(int ppuCycles);
-        void CtrlReg1Write(int addr);
-        void CtrlReg2Write(int addr);
-        void SpriteramRegWrite(int addr);
-        void SpriteramIOWrite(int addr);
-        void VRAMReg1Write(int addr);
-        void VRAMReg2Write(int addr);
-        void VramIOWrite(int addr);
+        void CtrlReg1Write(byte data);
+        void CtrlReg2Write(byte data);
+        void SpriteRegWrite(byte data);
+        void SpriteIOWrite(byte data);
+        void VRAMNametableWrite(byte data);
+        void VRAMReg2Write(byte data);
+        void VramIOWrite(byte data);
+        byte StatusRegRead();
+        byte SpriteIORead();
     }
 
     public class Ppu : IPpu
     {
+        private bool nmiOnVblank;
+        private bool _16bitSpriteSize;
+        private int bgAddr;
+        private uint spriteAddr;
+        private int ppuAddrIncr;
+        private bool bgVisible;
+        private int nameTableAddr;
+        private byte ppuMaster; // 0 = slave, 1 = master, 0xff = unset (master) 
         private IMemory memory;
-        //public void Control_Register_1_Write(byte data)
-        //{
-        //    //go bit by bit, and flag our values
-        //    if ((data & 0x80) == 0x80)
-        //        executeNMIonVBlank = true;
-        //    else
-        //        executeNMIonVBlank = false;
+        private bool monochromeDisplay;
+        private bool noBgClip;
+        private bool noSpriteClip;
+        private bool spritesVisible;
+        private int ppuColor;
+        private byte[] spriteRam;
+        private int vramAddr;
+        private byte[] nameTables;
+        private int prev_vramAddr;
+        private int vramHiLoToggle;
+        private int currentScanline;
+        private byte scrollH;
+        private int sprite0Hit;
+        private int spritesCrossed;
 
-        //    if ((data & 0x20) == 0x20)
-        //        spriteSize = 16;
-        //    else
-        //        spriteSize = 8;
-
-        //    if ((data & 0x10) == 0x10)
-        //        backgroundAddress = 0x1000;
-        //    else
-        //        backgroundAddress = 0x0000;
-
-        //    if ((data & 0x8) == 0x8)
-        //        spriteAddress = 0x1000;
-        //    else
-        //        spriteAddress = 0x0000;
-
-        //    if ((data & 0x4) == 0x4)
-        //        ppuAddressIncrement = 32;
-        //    else
-        //        ppuAddressIncrement = 1;
-        //    if ((backgroundVisible == true) || (ppuMaster == 0xff) || (ppuMaster == 1))
-        //    {
-        //        switch (data & 0x3)
-        //        {
-        //            case (0x0): nameTableAddress = 0x2000; break;
-        //            case (0x1): nameTableAddress = 0x2400; break;
-        //            case (0x2): nameTableAddress = 0x2800; break;
-        //            case (0x3): nameTableAddress = 0x2C00; break;
-        //        }
-        //    }
-        //    /*if (myEngine.fix_bgchange == true)
-        //    {
-        //        if (currentScanline == 241)
-        //            nameTableAddress = 0x2000;
-        //    }*/
-
-        //    if (ppuMaster == 0xff)
-        //    {
-        //        if ((data & 0x40) == 0x40)
-        //            ppuMaster = 0;
-        //        else
-        //            ppuMaster = 1;
-        //    }
-        //}
-        //public void Control_Register_2_Write(byte data)
-        //{
-        //    if ((data & 0x1) == 0x1)
-        //        monochromeDisplay = true;
-        //    else
-        //        monochromeDisplay = false;
-        //    if ((data & 0x2) == 0x2)
-        //        noBackgroundClipping = true;
-        //    else
-        //        noBackgroundClipping = false;
-
-        //    if ((data & 0x4) == 0x4)
-        //        noSpriteClipping = true;
-        //    else
-        //        noSpriteClipping = false;
-
-        //    if ((data & 0x8) == 0x8)
-        //        backgroundVisible = true;
-        //    else
-        //        backgroundVisible = false;
-
-        //    if ((data & 0x10) == 0x10)
-        //        spritesVisible = true;
-        //    else
-        //        spritesVisible = false;
-
-        //    ppuColor = (data >> 5);
-
-        //}
         public void Step(int ppuCycles)
         {
 
         }
-#region commands
-        public void CtrlReg1Write(int addr)
+        #region registers
+
+        #region read
+
+        public byte SpriteIORead()
+        {
+            return spriteRam[spriteAddr];
+        }
+        public byte StatusRegRead()
+        {
+            byte returnedValue = 0;
+
+            // VBlank
+            if (currentScanline == 240)
+                returnedValue = (byte)(returnedValue | 0x80);
+
+            if (sprite0Hit == 1)
+            {
+                returnedValue = (byte)(returnedValue | 0x40);
+            }
+            // Sprites on current scanline
+            if (spritesCrossed > 8)
+                returnedValue = (byte)(returnedValue | 0x20);
+
+            vramHiLoToggle = 1;
+
+            return returnedValue;
+        }
+
+        #endregion
+        public void CtrlReg1Write(byte data)
+        {
+
+            //Should we do a non-maskable interupt on vblank?
+            nmiOnVblank = (data & 0x80) == 0x80;
+            //Else infer 8bit;
+            _16bitSpriteSize = (data & 0x20) == 0x20;
+            bgAddr = (data & 0x10) == 0x10 ? 0x1000 : 0x0000;
+            spriteAddr = (data & 0x8) == 0x8 ? 0x1000 : (uint)0x000;
+            ppuAddrIncr = (data & 0x4) == 0x4 ? 32 : 1;
+            if (bgVisible || ppuMaster != 0 /*unset or master*/)
+            {
+                switch (data & 0x3)
+                {
+                    case (0x0): nameTableAddr = 0x2000; break;
+                    case (0x1): nameTableAddr = 0x2400; break;
+                    case (0x2): nameTableAddr = 0x2800; break;
+                    case (0x3): nameTableAddr = 0x2C00; break;
+                }
+            }
+            //If ppu is unset, if data is 0x4.. set ppu to slave else master
+            ppuMaster =
+                ppuMaster == 0xff ?
+                    ((data & 0x40) == 0x40 ?
+                            (byte)0 :
+                            (byte)1)
+                    : ppuMaster;
+
+        }
+        public void CtrlReg2Write(byte data)
+        {
+            monochromeDisplay = (data & 0x1) == 0x1;
+            noBgClip = (data & 0x2) == 0x2;
+            noSpriteClip = (data & 0x4) == 0x4;
+            bgVisible = (data & 0x8) == 0x8;
+            spritesVisible = (data & 0x10) == 0x10;
+            ppuColor = (data >> 5);
+        }
+
+        public void SpriteIOWrite(byte data)
+        {
+            spriteRam[spriteAddr] = data;
+            spriteAddr++;
+        }
+
+
+
+
+        public void SpriteRegWrite(byte addr)
+        {
+            spriteAddr = addr;
+        }
+
+
+
+        public void VramIOWrite(byte addr)
         {
             throw new NotImplementedException();
         }
 
-        public void CtrlReg2Write(int addr)
+        public void VRAMNametableWrite(byte data)
         {
-            throw new NotImplementedException();
+            return; //Not implemented yet
+            if (vramAddr < 0x200)
+            {
+                /*Mapper Write ChrRom , vramAddr, data*/
+            }
+            else if (vramAddr >= 0x2000 && vramAddr < 0x3f00)
+            {
+                //If mirroring
+
+                //Horizontal Mirroring
+                switch (vramAddr & 0x2c00)
+                {
+                    case (0x2000):
+                        nameTables[vramAddr - 0x2000] = data;
+                        break;
+                    case (0x2400):
+                        nameTables[(vramAddr - 0x400) - 0x2000] = data;
+                        break;
+                    case (0x2800):
+                        nameTables[vramAddr - 0x400 - 0x2000] = data;
+                        break;
+                    case (0x2C00):
+                        nameTables[(vramAddr - 0x800) - 0x2000] = data;
+                        break;
+                }
+                //vertical
+                switch (vramAddr & 0x2c00)
+                {
+                    case (0x2000):
+                        nameTables[vramAddr - 0x2000] = data;
+                        break;
+                    case (0x2400):
+                        nameTables[vramAddr - 0x2000] = data;
+                        break;
+                    case (0x2800):
+                        nameTables[vramAddr - 0x800 - 0x2000] = data;
+                        break;
+                    case (0x2C00):
+                        nameTables[(vramAddr - 0x800) - 0x2000] = data;
+                        break;
+                }
+
+                //onescreen 0x2000 base
+                switch (vramAddr & 0x2C00)
+                {
+                    case (0x2000):
+                        nameTables[vramAddr - 0x2000] = data;
+                        break;
+                    case (0x2400):
+                        nameTables[vramAddr - 0x400 - 0x2000] = data;
+                        break;
+                    case (0x2800):
+                        nameTables[vramAddr - 0x800 - 0x2000] = data;
+                        break;
+                    case (0x2C00):
+                        nameTables[vramAddr - 0xC00 - 0x2000] = data;
+                        break;
+                }
+
+                //Onescreen 0x2400 base
+                switch (vramAddr & 0x2C00)
+                {
+                    case (0x2000):
+                        nameTables[vramAddr + 0x400 - 0x2000] = data;
+                        break;
+                    case (0x2400):
+                        nameTables[vramAddr - 0x2000] = data;
+                        break;
+                    case (0x2800):
+                        nameTables[vramAddr - 0x400 - 0x2000] = data;
+                        break;
+                    case (0x2C00):
+                        nameTables[vramAddr - 0x800 - 0x2000] = data;
+                        break;
+                }
+
+                //if vramAddr >= 0x3f00 && vramAddr < 0x3f20
+
+                nameTables[vramAddr - 0x2000] = data;
+                if ((vramAddr & 0x7) == 0)
+                {
+                    nameTables[(vramAddr - 0x2000) ^ 0x10] = data;
+                }
+            }
+            vramAddr = vramAddr + ppuAddrIncr;
         }
 
-        public void SpriteramIOWrite(int addr)
+        public void VRAMReg2Write(byte data)
         {
-            throw new NotImplementedException();
-        }
-
-        public void SpriteramRegWrite(int addr)
+        if (vramHiLoToggle == 1)
         {
-            throw new NotImplementedException();
+            prev_vramAddr = vramAddr;
+            vramAddr = data << 8;
+            vramHiLoToggle = 0;
         }
-
-
-
-        public void VramIOWrite(int addr)
+        else
         {
-            throw new NotImplementedException();
+            vramAddr = vramAddr + data;
+            if ((prev_vramAddr == 0) && (currentScanline < 240))
+            {
+                //We may have a scrolling trick
+                if ((vramAddr >= 0x2000) && (vramAddr <= 0x2400))
+                    scrollH = (byte)(((vramAddr - 0x2000) / 0x20) * 8 - currentScanline);
+            }
+            vramHiLoToggle = 1;
         }
+    }
 
-        public void VRAMReg1Write(int addr)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void VRAMReg2Write(int addr)
-        {
-            throw new NotImplementedException();
-        }
-#endregion
+      
+        #endregion
     }
 }

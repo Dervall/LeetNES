@@ -38,13 +38,13 @@ namespace LeetNES
                     // Registers
                     if (addr == 0x2002 /*ppu status*/)
                     {
-                        //0x80 vblank scanline hit
-                        return PPU_Status_Register; //todo: read from correct ppu state
+                        
+                        return ppu.StatusRegRead(); 
 
                     }
                     if (addr == 0x2004)
                     {
-                        return sprite[spriteAddress];
+                        return ppu.SpriteIORead();
                     }
                     if (addr == 0x2007)
                     {
@@ -80,25 +80,25 @@ namespace LeetNES
                     switch (addr)
                     {
                         case 0x2000:
-                            ppu.CtrlReg1Write(addr);
+                            ppu.CtrlReg1Write((byte)addr);
                             break;
                         case 0x2001:
-                            ppu.CtrlReg2Write(addr);
+                            ppu.CtrlReg2Write((byte)addr);
                             break;
                         case 0x2003:
-                            ppu.SpriteramRegWrite(addr);
+                            ppu.SpriteRegWrite((byte)addr);
                             break;
                         case 0x2004:
-                            ppu.SpriteramIOWrite(addr);
+                            //ppu.SpriteramIOWrite(addr);
                             break;
                         case 0x2005:
-                            ppu.VRAMReg1Write(addr);
+                            //ppu.VRAMReg1Write(addr);
                             break;
                         case 0x2006:
-                            ppu.VRAMReg2Write(addr);
+                            ppu.VRAMReg2Write((byte)addr);
                             break;
                         case 0x2007:
-                            ppu.VramIOWrite(addr);
+                            ppu.VramIOWrite((byte)addr);
                             break;
                     }
                     
