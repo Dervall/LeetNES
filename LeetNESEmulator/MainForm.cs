@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LeetNESEmulator
@@ -19,10 +20,12 @@ namespace LeetNESEmulator
 
         public void SetPixel(int pixelX, int pixelY, int paletteIndex)
         {
-            // Invoke check..coming from emulator thread.
-            // Slow as a dog, but fix later.
-            _surface.SetPixel(pixelX, pixelY, Color.Red);
-            Invalidate(new Rectangle(pixelX, pixelY, 1, 1));
+            Invoke(new Action(() =>
+            {
+                // Slow as a dog, but fix later.
+                _surface.SetPixel(pixelX, pixelY, Color.Red);
+                Invalidate(new Rectangle(pixelX, pixelY, 1, 1));    
+            }));
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -31,7 +34,11 @@ namespace LeetNESEmulator
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.DrawImageUnscaled(_surface, 0, 0);
+            e.Graphics.DrawImage(
+                _surface,
+                ClientRectangle,
+                new Rectangle(0, 0, _surface.Width, _surface.Height),
+                GraphicsUnit.Pixel);
         }
     }
 }
