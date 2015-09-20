@@ -29,11 +29,11 @@ namespace LeetNES.ALU.Instructions
             get
             {
                 return new Dictionary<byte, AddressingMode> {
-                    { 0xA9, AddressingMode.Accumulator },
-                    { 0xA5, AddressingMode.ZeroPage },
-                    { 0xB5, AddressingMode.ZeroPageXIndexed },
-                    { 0xAD, AddressingMode.Absolute },
-                    { 0xBD, AddressingMode.AbsoluteX }
+                    { 0x4A, AddressingMode.Accumulator },
+                    { 0x46, AddressingMode.ZeroPage },
+                    { 0x56, AddressingMode.ZeroPageXIndexed },
+                    { 0x4E, AddressingMode.Absolute },
+                    { 0x5E, AddressingMode.AbsoluteX }
                 };
             }
         }
