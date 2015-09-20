@@ -41,7 +41,7 @@ namespace LeetNES
         private int prev_vramAddr;
         private int vramHiLoToggle;
         private byte scrollH;
-        private int sprite0Hit;
+        private bool sprite0Hit;
         private int spritesCrossed;
 
         private int currentScanline = 0;
@@ -56,6 +56,12 @@ namespace LeetNES
 
         public void Step(int ppuCycles)
         {
+            if (currentScanline == -1 && x == 0)
+            {
+                inVblank = false;
+                sprite0Hit = false;
+            }
+
             // Render goes here
 
             // 241 starts the VBlank region.
@@ -103,7 +109,7 @@ namespace LeetNES
             if (inVblank)
                 returnedValue = (byte)(returnedValue | 0x80);
 
-            if (sprite0Hit == 1)
+            if (sprite0Hit)
             {
                 returnedValue = (byte)(returnedValue | 0x40);
             }
