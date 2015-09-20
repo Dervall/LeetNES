@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
+using log4net.Appender;
 using LeetNES.ALU;
 
 namespace LeetNES
@@ -12,14 +14,21 @@ namespace LeetNES
         void SpriteRegWrite(byte data);
         void SpriteIOWrite(byte data);
         void VRAMNametableWrite(byte data);
+        void VRAMReg1Write(byte data);
         void VRAMReg2Write(byte data);
-        void VramIOWrite(byte data);
         byte StatusRegRead();
         byte SpriteIORead();
     }
 
+    public enum MirrorMode
+    {
+        Vertical,
+        Horizontal,
+        SingleScreen
+    }
     public class Ppu : IPpu
     {
+        private MirrorMode mirrorMode;
         private readonly Lazy<ICpu> cpu;
         private bool nmiOnVblank;
         private bool _16bitSpriteSize;
@@ -48,10 +57,17 @@ namespace LeetNES
         private int x;
         private bool oddFrame = false;
         private bool inVblank = false;
+        private byte scrollV;
+        private bool fix_scrolloffset2;
+        private bool fix_scrolloffset1;
+        private bool fix_scrolloffset3;
 
         public Ppu(Lazy<ICpu> cpu)
         {
             this.cpu = cpu;
+
+            //Todo: Allow setting of mirrormode
+            this.mirrorMode = MirrorMode.Vertical;
         }
 
         public void Step(int ppuCycles)
@@ -171,17 +187,12 @@ namespace LeetNES
         }
 
 
-
-        public void VramIOWrite(byte addr)
-        {
-            throw new NotImplementedException();
-        }
-
         public void VRAMNametableWrite(byte data)
         {
-            return; //Not implemented yet
+            //Not implemented yet
             if (vramAddr < 0x200)
             {
+                Debug.WriteLine("Should write to chrRom");
                 /*Mapper Write ChrRom , vramAddr, data*/
             }
             else if (vramAddr >= 0x2000 && vramAddr < 0x3f00)
@@ -189,81 +200,130 @@ namespace LeetNES
                 //If mirroring
 
                 //Horizontal Mirroring
-                switch (vramAddr & 0x2c00)
+                if (mirrorMode == MirrorMode.Horizontal)
                 {
-                    case (0x2000):
-                        nameTables[vramAddr - 0x2000] = data;
-                        break;
-                    case (0x2400):
-                        nameTables[(vramAddr - 0x400) - 0x2000] = data;
-                        break;
-                    case (0x2800):
-                        nameTables[vramAddr - 0x400 - 0x2000] = data;
-                        break;
-                    case (0x2C00):
-                        nameTables[(vramAddr - 0x800) - 0x2000] = data;
-                        break;
+                    switch (vramAddr & 0x2c00)
+                    {
+                        case (0x2000):
+                            nameTables[vramAddr - 0x2000] = data;
+                            break;
+                        case (0x2400):
+                            nameTables[(vramAddr - 0x400) - 0x2000] = data;
+                            break;
+                        case (0x2800):
+                            nameTables[vramAddr - 0x400 - 0x2000] = data;
+                            break;
+                        case (0x2C00):
+                            nameTables[(vramAddr - 0x800) - 0x2000] = data;
+                            break;
+                    }
                 }
                 //vertical
-                switch (vramAddr & 0x2c00)
+                else if (mirrorMode == MirrorMode.Vertical)
                 {
-                    case (0x2000):
-                        nameTables[vramAddr - 0x2000] = data;
-                        break;
-                    case (0x2400):
-                        nameTables[vramAddr - 0x2000] = data;
-                        break;
-                    case (0x2800):
-                        nameTables[vramAddr - 0x800 - 0x2000] = data;
-                        break;
-                    case (0x2C00):
-                        nameTables[(vramAddr - 0x800) - 0x2000] = data;
-                        break;
+
+                    switch (vramAddr & 0x2c00)
+                    {
+                        case (0x2000):
+                            nameTables[vramAddr - 0x2000] = data;
+                            break;
+                        case (0x2400):
+                            nameTables[vramAddr - 0x2000] = data;
+                            break;
+                        case (0x2800):
+                            nameTables[vramAddr - 0x800 - 0x2000] = data;
+                            break;
+                        case (0x2C00):
+                            nameTables[(vramAddr - 0x800) - 0x2000] = data;
+                            break;
+                    }
                 }
 
                 //onescreen 0x2000 base
-                switch (vramAddr & 0x2C00)
-                {
-                    case (0x2000):
-                        nameTables[vramAddr - 0x2000] = data;
-                        break;
-                    case (0x2400):
-                        nameTables[vramAddr - 0x400 - 0x2000] = data;
-                        break;
-                    case (0x2800):
-                        nameTables[vramAddr - 0x800 - 0x2000] = data;
-                        break;
-                    case (0x2C00):
-                        nameTables[vramAddr - 0xC00 - 0x2000] = data;
-                        break;
-                }
+                //switch (vramAddr & 0x2C00)
+                //{
+                //    case (0x2000):
+                //        nameTables[vramAddr - 0x2000] = data;
+                //        break;
+                //    case (0x2400):
+                //        nameTables[vramAddr - 0x400 - 0x2000] = data;
+                //        break;
+                //    case (0x2800):
+                //        nameTables[vramAddr - 0x800 - 0x2000] = data;
+                //        break;
+                //    case (0x2C00):
+                //        nameTables[vramAddr - 0xC00 - 0x2000] = data;
+                //        break;
+                //}
 
                 //Onescreen 0x2400 base
-                switch (vramAddr & 0x2C00)
-                {
-                    case (0x2000):
-                        nameTables[vramAddr + 0x400 - 0x2000] = data;
-                        break;
-                    case (0x2400):
-                        nameTables[vramAddr - 0x2000] = data;
-                        break;
-                    case (0x2800):
-                        nameTables[vramAddr - 0x400 - 0x2000] = data;
-                        break;
-                    case (0x2C00):
-                        nameTables[vramAddr - 0x800 - 0x2000] = data;
-                        break;
-                }
+                //switch (vramAddr & 0x2C00)
+                //{
+                //    case (0x2000):
+                //        nameTables[vramAddr + 0x400 - 0x2000] = data;
+                //        break;
+                //    case (0x2400):
+                //        nameTables[vramAddr - 0x2000] = data;
+                //        break;
+                //    case (0x2800):
+                //        nameTables[vramAddr - 0x400 - 0x2000] = data;
+                //        break;
+                //    case (0x2C00):
+                //        nameTables[vramAddr - 0x800 - 0x2000] = data;
+                //        break;
+                //}
 
                 //if vramAddr >= 0x3f00 && vramAddr < 0x3f20
-
-                nameTables[vramAddr - 0x2000] = data;
-                if ((vramAddr & 0x7) == 0)
+                else if (vramAddr >= 0x3f00 && vramAddr < 0x3f20)
                 {
-                    nameTables[(vramAddr - 0x2000) ^ 0x10] = data;
+
+                    nameTables[vramAddr - 0x2000] = data;
+                    if ((vramAddr & 0x7) == 0)
+                    {
+                        nameTables[(vramAddr - 0x2000) ^ 0x10] = data;
+                    }
                 }
             }
             vramAddr = vramAddr + ppuAddrIncr;
+        }
+
+        public void VRAMReg1Write(byte data)
+        {
+
+
+            if (vramHiLoToggle == 1)
+            {
+                scrollV = data;
+                vramHiLoToggle = 0;
+            }
+            else
+            {
+                scrollH = data;
+                if (scrollH > 239)
+                {
+                    scrollH = 0;
+                }
+                if (fix_scrolloffset2)
+                {
+                    if (currentScanline < 240)
+                    {
+                        scrollH = (byte) (scrollH - currentScanline + 8);
+                    }
+                }
+                if (fix_scrolloffset1)
+                {
+                    if (currentScanline < 240)
+                    {
+                        scrollH = (byte) (scrollH - currentScanline);
+                    }
+                }
+                if (fix_scrolloffset3)
+                {
+                    if (currentScanline < 240)
+                        scrollH = 238;
+                }
+                vramHiLoToggle = 1;
+            }
         }
 
         public void VRAMReg2Write(byte data)
@@ -279,7 +339,6 @@ namespace LeetNES
             vramAddr = vramAddr + data;
             if ((prev_vramAddr == 0) && (currentScanline < 240))
             {
-                //We may have a scrolling trick
                 if ((vramAddr >= 0x2000) && (vramAddr <= 0x2400))
                     scrollH = (byte)(((vramAddr - 0x2000) / 0x20) * 8 - currentScanline);
             }
