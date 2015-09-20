@@ -21,6 +21,8 @@ namespace LeetNES
     public class Ppu : IPpu
     {
         private readonly Lazy<ICpu> cpu;
+        private readonly Lazy<IMemory> _memory;
+        private readonly Lazy<StolenPpu> _ppu;
         private bool nmiOnVblank;
         private bool _16bitSpriteSize;
         private int bgAddr;
@@ -48,14 +50,32 @@ namespace LeetNES
         private int x;
         private bool oddFrame = false;
         private bool inVblank = false;
+       
+        byte _PPUCTRL;
+        byte _PPUMASK;
+        byte _PPUSTATUS;
+        ushort _PPUSCROLL;
+        ushort _PPUADDR;
+        byte _PPUDATA;
 
-        public Ppu(Lazy<ICpu> cpu)
+        // Object Attribute Memory (OAM) is memory internal to the PPU that contains sprite 
+        // data (positions, mirroring, priority, pallete, etc.) for up to 64 sprites, each taking up 4 bytes.
+        byte _OAMDATA;
+        byte _OAMADDR;
+        byte _OAMDMA;
+
+        private uint[] _imageData = new uint[256 * 240];
+
+        public Ppu(Lazy<ICpu> cpu, Lazy<IMemory> memory, Lazy<StolenPpu> ppu)
         {
             this.cpu = cpu;
+            _memory = memory;
+            _ppu = ppu;
         }
 
         public void Step(int ppuCycles)
         {
+            _ppu.Value.drawBackground(x, currentScanline);
             // Render goes here
 
             // 241 starts the VBlank region.
@@ -71,7 +91,6 @@ namespace LeetNES
                 }
             }
 
-            ++x;
 
             // Variable line width for the pre-scanline depending on even/odd frame
             int columnsThisFrame = bgVisible && oddFrame && currentScanline == -1 ? 340 : 341;
@@ -87,6 +106,7 @@ namespace LeetNES
                 oddFrame = !oddFrame;
             }
         }
+
         #region registers
 
         #region read

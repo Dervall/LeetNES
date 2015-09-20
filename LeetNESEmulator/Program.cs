@@ -48,6 +48,7 @@ namespace LeetNESEmulator
             builder.RegisterType<Emulator>().As<IEmulator>();
             builder.RegisterType<Memory>().As<IMemory>().SingleInstance();
             builder.RegisterType<Ppu>().As<IPpu>();
+            builder.RegisterType<StolenPpu>();
 
             var instructionTypes = Assembly.GetExecutingAssembly().GetTypes().Where(f => typeof(IInstruction).IsAssignableFrom(f) && !f.IsAbstract).ToArray();
             builder.RegisterTypes(instructionTypes).As<IInstruction>();
