@@ -101,6 +101,7 @@
     <Compile Include="ALU\Instructions\SED.cs" />
     <Compile Include="ALU\Instructions\STA.cs" />
     <Compile Include="ALU\Instructions\STX.cs" />
+    <Compile Include="ALU\Instructions\TXA.cs" />
     <Compile Include="Mappers\IMapper.cs" />
     <Compile Include="ALU\Instructions\STY.cs" />
     <Compile Include="ALU\Instructions\TAX.cs" />

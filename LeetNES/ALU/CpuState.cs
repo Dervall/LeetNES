@@ -55,7 +55,7 @@ namespace LeetNES.ALU
 
         public byte PopStack(IMemory memory)
         {
-            return memory[Sp++];
+            return memory[++Sp];
         }
 
         public void Interrupt(int interruptAddress, IMemory mem)
