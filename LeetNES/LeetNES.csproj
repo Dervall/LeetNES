@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -101,6 +101,7 @@
     <Compile Include="ALU\Instructions\SED.cs" />
     <Compile Include="ALU\Instructions\STA.cs" />
     <Compile Include="ALU\Instructions\STX.cs" />
+    <Compile Include="ALU\Instructions\TXA.cs" />
     <Compile Include="Mappers\IMapper.cs" />
     <Compile Include="ALU\Instructions\STY.cs" />
     <Compile Include="ALU\Instructions\TAX.cs" />

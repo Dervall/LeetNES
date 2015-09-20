@@ -48,7 +48,7 @@ namespace LeetNES
                     }
                     if (addr == 0x2007)
                     {
-
+                        
                     }
                     // TODO
                     return 0;
@@ -73,7 +73,7 @@ namespace LeetNES
             {
                 if (addr < 0x2000)
                 {
-                    ram[addr & 0x800] = value;
+                    ram[addr & 0x1FFF] = value;
                 }
                 else if (addr < 0x4000)
                 {
@@ -103,10 +103,9 @@ namespace LeetNES
                     }
                     
                 }
-                else if (addr < 0x6000)
+                else if (addr < 0x4020)
                 {
-                    // APU and expansion rom.
-                    throw new NotImplementedException();
+                    // Ignore APU registers
                 }
                 else if (addr < 0x8000)
                 {
