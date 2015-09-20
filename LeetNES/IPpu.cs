@@ -31,6 +31,8 @@ namespace LeetNES
     {
         private MirrorMode mirrorMode;
         private readonly Lazy<ICpu> cpu;
+        private readonly Lazy<IMemory> _memory;
+        private readonly Lazy<StolenPpu> _ppu;
         private bool nmiOnVblank;
         private bool _16bitSpriteSize;
         private int bgAddr;
@@ -63,11 +65,15 @@ namespace LeetNES
         private bool fix_scrolloffset1;
         private bool fix_scrolloffset3;
         private byte vramReadBuffer;
+      
 
-        public Ppu(Lazy<ICpu> cpu)
+        public Ppu(Lazy<ICpu> cpu, Lazy<IMemory> memory, Lazy<StolenPpu> ppu)
         {
             this.cpu = cpu;
-
+            _memory = memory;
+            _ppu = ppu;
+            nameTables = new byte[1024];
+            spriteRam = new byte[256];
             //Todo: Allow setting of mirrormode
             this.mirrorMode = MirrorMode.Vertical;
         }
@@ -80,6 +86,8 @@ namespace LeetNES
                 sprite0Hit = false;
             }
 
+            _ppu.Value.drawBackground(x, currentScanline);
+            
             // Render goes here
 
             // 241 starts the VBlank region.
@@ -95,7 +103,6 @@ namespace LeetNES
                 }
             }
 
-            ++x;
 
             // Variable line width for the pre-scanline depending on even/odd frame
             int columnsThisFrame = bgVisible && oddFrame && currentScanline == -1 ? 340 : 341;
@@ -111,6 +118,7 @@ namespace LeetNES
                 oddFrame = !oddFrame;
             }
         }
+
         #region registers
 
         #region read

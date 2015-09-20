@@ -11,6 +11,7 @@ namespace LeetNES
 
         public Cartridge(string fileName)
         {
+            NametableMirroring = NametableMirroringMode.Vertical;
             using (var fileStream = File.OpenRead(fileName))
             {
                 var header = new byte[16];
@@ -82,5 +83,7 @@ namespace LeetNES
         {
             return chrMem[addr];
         }
+
+        public NametableMirroringMode NametableMirroring { get; set; }
     }
 }
