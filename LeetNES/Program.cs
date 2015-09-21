@@ -30,7 +30,7 @@ namespace LeetNES
                 .As<IInstruction>();
 
             //var cartridge = new Cartridge("../../roms/nestest.nes");
-            var cartridge = new Cartridge("../../roms/Donkey Kong (JU).nes");
+            var cartridge = new Cartridge("../../roms/Balloon Fight (JU) [!].nes");
 
             containerBuilder.RegisterInstance(cartridge).As<ICartridge>();
 

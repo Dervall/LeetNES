@@ -52,8 +52,8 @@ namespace LeetNESEmulator
 
 
 
-            var cartridge = new Cartridge("../../../LeetNES/roms/nestest.nes");
-            //var cartridge = new Cartridge("../../../LeetNES/roms/Donkey Kong (JU).nes");
+            //var cartridge = new Cartridge("../../../LeetNES/roms/nestest.nes");
+            var cartridge = new Cartridge("../../../LeetNES/roms/Bomberman (U).nes");
 
             builder.RegisterInstance(cartridge).As<ICartridge>();
 
