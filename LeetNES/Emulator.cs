@@ -6,11 +6,13 @@ namespace LeetNES
     {
         private readonly ICpu cpu;
         private readonly IPpu ppu;
+        private readonly IMemory memory;
 
-        public Emulator(ICpu cpu, IPpu ppu)
+        public Emulator(ICpu cpu, IPpu ppu, IMemory memory)
         {
             this.cpu = cpu;
             this.ppu = ppu;
+            this.memory = memory;
         }
 
         public void Step()
@@ -22,6 +24,11 @@ namespace LeetNES
         public void Reset()
         {
             cpu.Reset();
+        }
+
+        public void LoadCartridge(ICartridge cartridge)
+        {
+            memory.SetCartridge(cartridge);
         }
     }
 }

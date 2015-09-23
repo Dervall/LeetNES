@@ -76,17 +76,17 @@ namespace LeetNES.ALU.Instructions
                     break;
                 case AddressingMode.XIndexedIndirect:
                 {
-                    var addr = memory.ReadShort((memory[cpuState.Pc + 1] + cpuState.X) & 0xFF);
+                    var addr = memory.ReadZeroPageShort((byte) ((memory[cpuState.Pc + 1] + cpuState.X) & 0xFF));
                     arg = memory[addr];
                     write = b => memory[addr] = b;
                     cycles = 6;
                     break;
                 }
                 case AddressingMode.IndirectYIndexed:
-                    var addrPreOffset = memory.ReadShort(memory[cpuState.Pc + 1]);
+                    var addrPreOffset = memory.ReadZeroPageShort(memory[cpuState.Pc + 1]);
                     var addrPostOffset = addrPreOffset + cpuState.Y;
                     cycles = 5;
-                    arg = memory[addrPostOffset];
+                    arg = memory[addrPostOffset & 0xFFFF];
                     if ((addrPostOffset & 0xFF00) != (addrPreOffset & 0xFF00))
                     {
                         ++cycles;

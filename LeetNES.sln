@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetNES", "LeetNES\LeetNES.csproj", "{A1CFE58E-50DA-482E-A4A6-10187578FD54}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "roms", "roms", "{A3AE05E8-7790-462A-813D-ADEFE600943F}"
@@ -14,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A5B0E7FF-75C2-47E8-B8F7-B592EECA1799}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetNESEmulator", "LeetNESEmulator\LeetNESEmulator.csproj", "{56EBBF5B-8A60-4DA5-BC43-6EE6F58E2447}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetNESMonoGame", "LeetNESMonoGame\LeetNESMonoGame.csproj", "{F8AB3C66-F5CB-4C35-874D-B98C83FDC53B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +33,10 @@ Global
 		{56EBBF5B-8A60-4DA5-BC43-6EE6F58E2447}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56EBBF5B-8A60-4DA5-BC43-6EE6F58E2447}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56EBBF5B-8A60-4DA5-BC43-6EE6F58E2447}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8AB3C66-F5CB-4C35-874D-B98C83FDC53B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8AB3C66-F5CB-4C35-874D-B98C83FDC53B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8AB3C66-F5CB-4C35-874D-B98C83FDC53B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8AB3C66-F5CB-4C35-874D-B98C83FDC53B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

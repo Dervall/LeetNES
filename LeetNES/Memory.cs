@@ -6,17 +6,24 @@ namespace LeetNES
     {
         private ICartridge cartridge;
         private readonly byte[] ram;
-        private IPpu ppu;
+        private readonly IPpu ppu;
+        private readonly Lazy<IIO> io;
 
-        public Memory(IPpu ppu)
+        public Memory(IPpu ppu, Lazy<IIO> io)
         {
             this.ppu = ppu;
+            this.io = io;
             ram = new byte[ushort.MaxValue];
         }
 
         public void SetCartridge(ICartridge cartridge)
         {
             this.cartridge = cartridge;
+        }
+
+        public byte ReadChrMem(ushort address)
+        {
+            return cartridge.ReadChrMem(address);
         }
 
         public byte this[int addr]
@@ -31,27 +38,15 @@ namespace LeetNES
                 
                 if (addr < 0x4000)
                 {
-                    return ppu.StolenRead((ushort) (addr ));
-               ///*     // Registers
-               //     if (addr == 0x2002 /*ppu status*/)
-               //     {
-                        
-               //         return ppu.StatusRegRead(); 
-
-               //     }
-               //     if (addr == 0x2004)
-               //     {
-               //         return ppu.SpriteIORead();
-               //     }
-               //     if (addr == 0x2007)
-               //     {
-               //         return ppu.VRAMNametableRead();
-               //     }
-               //     // TODO
-               //     return 0;*/
+                    return ppu.StolenRead((ushort) (addr));
                 }
                 if (addr < 0x6000)
                 {
+                    if (addr == 0x4016 || addr == 0x4017)
+                    {
+                        return io.Value.ReadController(addr & 1);
+                    }
+
                     // APU and expansion rom.
                     // TODO
                     return 0;
@@ -75,35 +70,14 @@ namespace LeetNES
                 else if (addr < 0x4000)
                 {
                     ppu.StolenWrite((ushort)(addr & 0xFFFF), value);
-                    /*         switch (addr)
-                    {
-                        case 0x2000:
-                            ppu.CtrlReg1Write((byte)addr);
-                            break;
-                        case 0x2001:
-                            ppu.CtrlReg2Write((byte)addr);
-                            break;
-                        case 0x2003:
-                            ppu.SpriteRegWrite((byte)addr);
-                            break;
-                        case 0x2004:
-                            //ppu.SpriteramIOWrite(addr);
-                            break;
-                        case 0x2005:
-                            //ppu.VRAMReg1Write(addr);
-                            break;
-                        case 0x2006:
-                            ppu.VRAMReg2Write((byte)addr);
-                            break;
-                        case 0x2007:
-                            ppu.VRAMNametableWrite((byte)addr);
-                            break;
-                    }*/
 
                 }
                 else if (addr < 0x4020)
                 {
-                    // Ignore APU registers
+                    if (addr == 0x4016)
+                    {
+                        io.Value.SetStrobe((value & 1) == 1);
+                    }
                 }
                 else if (addr < 0x8000)
                 {

@@ -45,6 +45,26 @@ namespace LeetNES.ALU.Instructions
             arg &= 0x7F;
             write(arg);
             cpuState.SetZeroFlag(arg);
+            cpuState.SetNegativeFlag(0);
+
+            switch (Variants[memory[cpuState.Pc]])
+            {
+                case AddressingMode.Accumulator:
+                    cycles = 2;
+                    break;
+                case AddressingMode.ZeroPage:
+                    cycles = 5;
+                    break;
+                case AddressingMode.ZeroPageXIndexed:
+                    cycles = 6;
+                    break;
+                case AddressingMode.Absolute:
+                    cycles = 6;
+                    break;
+                case AddressingMode.AbsoluteX: 
+                    cycles = 7;
+                    break;
+            }
         }
     }
 }

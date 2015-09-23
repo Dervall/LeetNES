@@ -46,11 +46,17 @@ namespace LeetNES.ALU.Instructions
         protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
         {
             var sum = (ushort) (arg + cpuState.A);
-            cpuState.A = (byte) (sum & 0xFF);
+            if (cpuState.IsFlagSet(CpuState.Flags.Carry))
+            {
+                ++sum;
+            }
+            var byteSum = (byte)(sum & 0xFF);
+
+            cpuState.SetOverflow(cpuState.A, arg, byteSum);            
+            cpuState.A = byteSum;
             cpuState.SetZeroFlag(cpuState.A);
             cpuState.SetNegativeFlag(cpuState.A);
-            cpuState.SetFlag(CpuState.Flags.Carry, sum & 0xFF00);
-            cpuState.SetFlag(CpuState.Flags.Overflow, sum & 0xFF00); // ??
+            cpuState.SetFlag(CpuState.Flags.Carry, sum & 0xFF00);           
         }
     }
 }

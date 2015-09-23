@@ -12,7 +12,12 @@ namespace LeetNES
         /// <returns></returns>
         public static ushort ReadShort(this IMemory mem, int addr)
         {
-            return (ushort) (mem[addr] | (mem[addr + 1] << 8));
+            return (ushort)(mem[addr] | (mem[addr + 1] << 8));
+        }
+
+        public static ushort ReadZeroPageShort(this IMemory mem, byte addr)
+        {
+            return (ushort)(mem[addr] | (mem[(addr + 1) & 0xFF] << 8));
         }
 
         public static IEnumerable<byte> SequenceFrom(this IMemory mem, ushort addr)

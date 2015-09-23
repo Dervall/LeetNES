@@ -17,7 +17,10 @@ namespace LeetNES.ALU.Instructions
 
         protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
         {
+            var breakSet = cpuState.IsFlagSet(CpuState.Flags.Break);
             cpuState.StatusRegister = cpuState.PopStack(memory);
+            cpuState.StatusRegister |= 1 << 5;
+            cpuState.SetFlag(CpuState.Flags.Break, breakSet);
             cycles = 4;
         }
     }

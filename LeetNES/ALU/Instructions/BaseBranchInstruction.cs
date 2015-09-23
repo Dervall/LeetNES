@@ -23,9 +23,13 @@ namespace LeetNES.ALU.Instructions
 
         public int Execute(CpuState cpuState, IMemory memory)
         {
+            // Addresses are relative to the beginning of the next instruction not
+            // the beginning of this one, so we'll need to advance the program counter.
+            cpuState.Pc += 2;
+
             if (ShouldBranch(cpuState, memory))
             {
-                var offset = memory[cpuState.Pc + 1];
+                var offset = memory[cpuState.Pc - 1];
                 ushort newPc;
                 if ((offset & 0x80) != 0)
                 {
@@ -36,12 +40,8 @@ namespace LeetNES.ALU.Instructions
                     newPc = (ushort)(cpuState.Pc + offset);
                 }
 
-                // Addresses are relative to the beginning of the next instruction not
-                // the beginning of this one, so we'll need to advance the program counter.
-                newPc += 2;
-                
                 int cycles = 3;
-                if ((newPc & 0xFF0) != (cpuState.Pc & 0xFF00))
+                if ((newPc & 0xFF00) != (cpuState.Pc & 0xFF00))
                 {
                     // Extra cycle if the relative branch occurs to cross a page boundary
                     ++cycles;
@@ -49,7 +49,7 @@ namespace LeetNES.ALU.Instructions
                 cpuState.Pc = newPc;
                 return cycles;
             }
-            cpuState.Pc += 2;
+
             return 2;
         }
 

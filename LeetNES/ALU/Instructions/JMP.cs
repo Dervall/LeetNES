@@ -35,7 +35,10 @@ namespace LeetNES.ALU.Instructions
             ushort dest = memory.ReadShort(cpuState.Pc + 1);
             if (Variants[memory[cpuState.Pc]] == AddressingMode.Indirect)
             {
-                dest = memory.ReadShort(dest);
+                // Reading the address cannot page wrap
+                var secondByte = (dest + 1) & 0xFF;
+                secondByte |= dest & 0xFF00;
+                dest = (ushort) (memory[dest] | (memory[secondByte] << 8));
                 cycles = 5;
             }
             cpuState.Pc = dest;

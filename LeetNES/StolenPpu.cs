@@ -17,7 +17,6 @@ namespace LeetNES
         }
 
         private readonly ICpu cpu;
-        private readonly ICartridge _cartridge;
         private readonly IMemory _memory;
         private readonly IPresenter presenter;
 
@@ -142,6 +141,7 @@ namespace LeetNES
 
             byte RGB_index = readRAM((ushort) (0x3F00 + 4*palette_num + color_index));
             uint pixelColor = RGBA_PALETTE[RGB_index & 0x3F];
+
             if (false)
             {
                 if (color_index == 0) pixelColor = 0xFF00FFFF;
@@ -326,10 +326,9 @@ namespace LeetNES
 
         #endregion
 
-        public StolenPpu(ICpu cpu, ICartridge cartridge, IMemory memory, IPresenter presenter)
+        public StolenPpu(ICpu cpu, IMemory memory, IPresenter presenter)
         {
             this.cpu = cpu;
-            _cartridge = cartridge;
             _memory = memory;
             this.presenter = presenter;
             for (int i = 0; i < 0x4000; ++i)
@@ -426,7 +425,7 @@ namespace LeetNES
         {
           //  if (true && _cartridge.ReadChrMem() && cpu.cartridge.CHRROM_8KBankCount > 0)
             {
-                return _cartridge.ReadChrMem(address);
+                return _memory.ReadChrMem(address);
             }
 
 
@@ -438,11 +437,11 @@ namespace LeetNES
             // Handle nametable mirroring
             if (addr >= 0x2000 && addr <= 0x2FFF)
             {
-                if (_cartridge.NametableMirroring == NametableMirroringMode.Vertical)
+               // if (_cartridge.NametableMirroring == NametableMirroringMode.Vertical)
                 {
                     return RAM[addr & 0xF7FF];
                 }
-                if (_cartridge.NametableMirroring == NametableMirroringMode.Horizontal)
+              /*  if (_cartridge.NametableMirroring == NametableMirroringMode.Horizontal)
                 {
                     return RAM[addr & 0xFBFF];
                 }
@@ -450,7 +449,7 @@ namespace LeetNES
                 {
                     return RAM[0x2000 | (addr & 0x3FF)];
                 }
-                return RAM[0x2400 | (addr & 0x3FF)];
+                return RAM[0x2400 | (addr & 0x3FF)];*/
             }
 
             return RAM[addr];

@@ -26,9 +26,9 @@ namespace LeetNES.ALU.Instructions
 
         public int Execute(CpuState cpuState, IMemory memory)
         {
-            var ret = cpuState.Pc + 3;
-            cpuState.PushStack((byte) (ret & 0xFF), memory);
-            cpuState.PushStack((byte) ((ret & 0xFF00) >> 8), memory);
+            var ret = cpuState.Pc + 2;
+            cpuState.PushStack((byte)((ret & 0xFF00) >> 8), memory);
+            cpuState.PushStack((byte) (ret & 0xFF), memory);            
             cpuState.Pc = memory.ReadShort(cpuState.Pc + 1);
             return 6;
         }

@@ -102,6 +102,7 @@
     <Compile Include="ALU\Instructions\STA.cs" />
     <Compile Include="ALU\Instructions\STX.cs" />
     <Compile Include="ALU\Instructions\TXA.cs" />
+    <Compile Include="IIO.cs" />
     <Compile Include="IPresenter.cs" />
     <Compile Include="Mappers\IMapper.cs" />
     <Compile Include="ALU\Instructions\STY.cs" />

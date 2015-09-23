@@ -26,9 +26,14 @@ namespace LeetNES.ALU.Instructions
 
         public int Execute(CpuState cpuState, IMemory memory)
         {
+            var breakSet = cpuState.IsFlagSet(CpuState.Flags.Break);
             cpuState.StatusRegister = cpuState.PopStack(memory);
-            var high = cpuState.PopStack(memory);
+            cpuState.SetFlag(CpuState.Flags.Break, breakSet);
+            cpuState.StatusRegister |= 1 << 5;
+
             var low = cpuState.PopStack(memory);
+            var high = cpuState.PopStack(memory);
+            
             cpuState.Pc = (ushort)((high << 8) | low);
 
             return 6;

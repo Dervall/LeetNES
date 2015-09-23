@@ -4,5 +4,6 @@
     {
         void Step();
         void Reset();
+        void LoadCartridge(ICartridge cartridge);
     }
 }

@@ -6,5 +6,6 @@ namespace LeetNES
     {
         byte this[int addr] { get; set; }
         void SetCartridge(ICartridge cartridge);
+        byte ReadChrMem(ushort address);
     }
 }

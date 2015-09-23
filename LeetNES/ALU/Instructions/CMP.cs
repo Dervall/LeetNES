@@ -49,11 +49,8 @@ namespace LeetNES.ALU.Instructions
         {
             var comparer = cpuState.A;
             var cmp = comparer - arg;
-
-            if (cmp < 0)
-            {
-                cpuState.SetFlag(CpuState.Flags.Carry, true);
-            }
+            
+            cpuState.SetFlag(CpuState.Flags.Carry, cmp >= 0);
             cpuState.SetNegativeFlag((byte) (cmp & 0xFF));
             cpuState.SetZeroFlag((byte) (cmp & 0xFF));
         }

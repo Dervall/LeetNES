@@ -20,6 +20,10 @@ namespace LeetNES.ALU.Instructions
 
         public int Execute(CpuState cpuState, IMemory memory)
         {
+            throw new Exception("die");
+            
+            
+            
             cpuState.Interrupt(0xFFFE, memory);
             return 7;
         }

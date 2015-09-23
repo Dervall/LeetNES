@@ -29,10 +29,6 @@ namespace LeetNES.ALU.Instructions
         {
             ushort result = arg;
             result <<= 1;
-            if (cpuState.IsFlagSet(CpuState.Flags.Carry))
-            {
-                result |= 1;
-            }
             var byteResult = (byte) (result & 0xFF);
             write(byteResult);
             cpuState.SetNegativeFlag(byteResult);

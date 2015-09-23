@@ -13,7 +13,7 @@ namespace LeetNES.ALU.Instructions
      --------------------------------------------
      zeropage      DEC oper      C6    2     5
      zeropage,X    DEC oper,X    D6    2     6
-     absolute      DEC oper      CE    3     3
+     absolute      DEC oper      CE    3     6
      absolute,X    DEC oper,X    DE    3     7
      */
     public class DEC : BaseInstruction
@@ -39,7 +39,7 @@ namespace LeetNES.ALU.Instructions
 
         protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
         {
-            var res = (byte) ((arg - 1)*0xFF);
+            var res = (byte) ((arg - 1)&0xFF);
             write(res);
             cpuState.SetNegativeFlag(res);
             cpuState.SetZeroFlag(res);
@@ -53,7 +53,7 @@ namespace LeetNES.ALU.Instructions
                     cycles = 6;
                     break;
                 case AddressingMode.Absolute:
-                    cycles = 3;
+                    cycles = 6;
                     break;
                 case AddressingMode.AbsoluteX:
                     cycles = 7;

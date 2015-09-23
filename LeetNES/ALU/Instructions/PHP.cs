@@ -7,7 +7,7 @@ namespace LeetNES.ALU.Instructions
     {
         public override string Mnemonic
         {
-            get { return "PHA"; }
+            get { return "PHP"; }
         }
 
         public override IDictionary<byte, AddressingMode> Variants
@@ -17,7 +17,8 @@ namespace LeetNES.ALU.Instructions
 
         protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
         {
-            cpuState.PushStack(cpuState.StatusRegister, memory);
+            // Break flag is always set
+            cpuState.PushStack((byte) (cpuState.StatusRegister | (byte)CpuState.Flags.Break), memory);
             cycles = 3;
         }
     }

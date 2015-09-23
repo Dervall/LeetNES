@@ -48,19 +48,21 @@ namespace LeetNES.ALU.Instructions
         {   
             //     A - M - C -> A                   N Z C I D V
             //                                      + + + - - +
+            
             int a = cpuState.A;
-            a -= arg;
+            arg ^= 0xFF;
+            a += arg;
             if (cpuState.IsFlagSet(CpuState.Flags.Carry))
             {
-                a--;
+                ++a;
             }
-            cpuState.A = (byte) (a & 0xFF);
+            var byteResult = (byte) (a & 0xFF);
+            cpuState.SetOverflow(cpuState.A, arg, byteResult);
+            cpuState.A = byteResult;
 
             cpuState.SetNegativeFlag(cpuState.A);
             cpuState.SetZeroFlag(cpuState.A);
-            cpuState.SetZeroFlag(cpuState.A);
-            cpuState.SetFlag(CpuState.Flags.Carry, a & 0x100);
-            cpuState.SetFlag(CpuState.Flags.Overflow, a & 0x100);
+            cpuState.SetFlag(CpuState.Flags.Carry, (byteResult & 0x80) == 0);
         }
     }
 }

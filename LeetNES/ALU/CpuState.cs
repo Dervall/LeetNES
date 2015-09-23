@@ -50,18 +50,25 @@ namespace LeetNES.ALU
 
         public void PushStack(byte b, IMemory memory)
         {
-            memory[0x100 + --Sp] = b;
+            memory[0x100 + Sp--] = b;
         }
 
         public byte PopStack(IMemory memory)
         {
-            return memory[0x100 + Sp++];
+            return memory[0x100 + (++Sp)];
+        }
+
+        public void SetOverflow(byte operand1, byte operand2, byte result)
+        {
+            // If two operands signs are equal, but not equal to the result sign there is overflow.
+            var overflowTest = (operand1 & 0x80) == (operand2 & 0x80) && (operand1 & 0x80) != (result & 0x80);
+            SetFlag(Flags.Overflow, overflowTest);
         }
 
         public void Interrupt(int interruptAddress, IMemory mem)
         {
-            PushStack((byte)(Pc & 0xFF), mem);
             PushStack((byte)(Pc >> 8), mem);
+            PushStack((byte)(Pc & 0xFF), mem);
             PushStack(StatusRegister, mem);
             SetFlag(Flags.InterruptDisable, true);
             Pc = mem.ReadShort(interruptAddress);

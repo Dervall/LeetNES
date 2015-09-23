@@ -34,8 +34,6 @@ namespace LeetNES.ALU.Instructions
         protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)
         {
             cpuState.Sp = cpuState.X;
-            cpuState.SetNegativeFlag(cpuState.Sp);
-            cpuState.SetZeroFlag(cpuState.Sp);
         }
     }
 }

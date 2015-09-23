@@ -17,10 +17,11 @@ namespace LeetNES.ALU.Instructions
 
         public int Execute(CpuState cpuState, IMemory memory)
         {
-            var high = cpuState.PopStack(memory);
             var low = cpuState.PopStack(memory);
+            var high = cpuState.PopStack(memory);
+            
             cpuState.Pc = (ushort)((high << 8) | low);
-
+            ++cpuState.Pc;
             return 6;
         }
     }
