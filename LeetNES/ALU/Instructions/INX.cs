@@ -13,19 +13,23 @@ namespace LeetNES.ALU.Instructions
      implied       INX           E8    1     2 */
     public class INX : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {
+                0xE8, AddressingMode.Implied
+            }
+        };
+
         public override string Mnemonic
         {
             get { return "INX"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> {
-                    {
-                        0xE8, AddressingMode.Implied
-                    }};
+                return addressingModes;
             }
         }
 

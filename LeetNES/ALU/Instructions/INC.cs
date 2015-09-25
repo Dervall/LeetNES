@@ -16,22 +16,24 @@ namespace LeetNES.ALU.Instructions
      absolute,X    INC oper,X    FE    3     7*/
     public class INC : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0xE6, AddressingMode.ZeroPage},
+            {0xF6, AddressingMode.ZeroPageXIndexed},
+            {0xEE, AddressingMode.Absolute},
+            {0xFE, AddressingMode.AbsoluteX},
+        };
+
         public override string Mnemonic
         {
             get { return "INC"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0xE6, AddressingMode.ZeroPage},
-                    {0xF6, AddressingMode.ZeroPageXIndexed},
-                    {0xEE, AddressingMode.Absolute},
-                    {0xFE, AddressingMode.AbsoluteX},
-                };
+                return addressingModes;
             }
         }
 

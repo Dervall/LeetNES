@@ -15,16 +15,18 @@ namespace LeetNES.ALU.Instructions
      */
     public class TSX : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> { { 0xBA, AddressingMode.Implied } };
+
         public override string Mnemonic
         {
             get { return "TSX"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> { { 0xBA, AddressingMode.Implied } };
+                return addressingModes;
             }
         }
 

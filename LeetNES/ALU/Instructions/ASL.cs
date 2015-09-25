@@ -5,23 +5,25 @@ namespace LeetNES.ALU.Instructions
 {
     public class ASL : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x0A, AddressingMode.Accumulator},
+            {0x06, AddressingMode.ZeroPage},
+            {0x16, AddressingMode.ZeroPageXIndexed},
+            {0x0E, AddressingMode.Absolute},
+            {0x1E, AddressingMode.AbsoluteX}
+        };
+
         public override string Mnemonic
         {
             get { return "ASL"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    { 0x0A, AddressingMode.Accumulator },
-                    { 0x06, AddressingMode.ZeroPage },
-                    { 0x16, AddressingMode.ZeroPageXIndexed },
-                    { 0x0E, AddressingMode.Absolute },
-                    { 0x1E, AddressingMode.AbsoluteX }
-                };
+                return addressingModes;
             }
         }
 

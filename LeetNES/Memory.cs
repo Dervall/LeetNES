@@ -74,6 +74,11 @@ namespace LeetNES
                 }
                 else if (addr < 0x4020)
                 {
+                    if (addr == 0x4014)
+                    {
+                        ppu.StolenWrite((ushort)(addr & 0xFFFF), value);
+                    }
+
                     if (addr == 0x4016)
                     {
                         io.Value.SetStrobe((value & 1) == 1);

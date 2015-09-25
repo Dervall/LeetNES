@@ -5,20 +5,22 @@ namespace LeetNES.ALU.Instructions
 {
     public class BIT : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x24, AddressingMode.ZeroPage},
+            {0x2C, AddressingMode.Absolute},
+        };
+
         public override string Mnemonic
         {
             get { return "BIT"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0x24, AddressingMode.ZeroPage},
-                    {0x2C, AddressingMode.Absolute},
-                };
+                return addressingModes;
             }
         }
 

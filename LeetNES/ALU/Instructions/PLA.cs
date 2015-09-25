@@ -13,14 +13,19 @@ namespace LeetNES.ALU.Instructions
      implied       PLA           68    1     4*/
     public class PLA : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> { { 0x68, AddressingMode.Implied } };
+
         public override string Mnemonic
         {
             get { return "PLA"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
-            get { return new Dictionary<byte, AddressingMode> { { 0x68, AddressingMode.Implied }}; }
+            get
+            {
+                return addressingModes;
+            }
         }
 
         protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)

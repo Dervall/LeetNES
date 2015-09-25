@@ -22,25 +22,28 @@ namespace LeetNES.ALU.Instructions
     /// </summary>
     public class LDA : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0xA9, AddressingMode.Immediate},
+            {0xA5, AddressingMode.ZeroPage},
+            {0xB5, AddressingMode.ZeroPageXIndexed},
+            {0xAD, AddressingMode.Absolute},
+            {0xBD, AddressingMode.AbsoluteX},
+            {0xB9, AddressingMode.AbsoluteY},
+            {0xA1, AddressingMode.XIndexedIndirect},
+            {0xB1, AddressingMode.IndirectYIndexed},
+        };
+
         public override string Mnemonic
         {
             get { return "LDA"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> {
-                    { 0xA9, AddressingMode.Immediate },
-                    { 0xA5, AddressingMode.ZeroPage },
-                    { 0xB5, AddressingMode.ZeroPageXIndexed },
-                    { 0xAD, AddressingMode.Absolute },
-                    { 0xBD, AddressingMode.AbsoluteX },
-                    { 0xB9, AddressingMode.AbsoluteY },
-                    { 0xA1, AddressingMode.XIndexedIndirect },
-                    { 0xB1, AddressingMode.IndirectYIndexed },
-                };
+                return addressingModes;
             }
         }
 

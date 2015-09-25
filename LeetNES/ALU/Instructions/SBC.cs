@@ -22,25 +22,28 @@ namespace LeetNES.ALU.Instructions
      */
     public class SBC : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0xE9, AddressingMode.Immediate},
+            {0xE5, AddressingMode.ZeroPage},
+            {0xF5, AddressingMode.ZeroPageXIndexed},
+            {0xED, AddressingMode.Absolute},
+            {0xFD, AddressingMode.AbsoluteX},
+            {0xF9, AddressingMode.AbsoluteY},
+            {0xE1, AddressingMode.XIndexedIndirect},
+            {0xF1, AddressingMode.IndirectYIndexed},
+        };
+
         public override string Mnemonic
         {
             get { return "SBC"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> {
-                    { 0xE9, AddressingMode.Immediate },
-                    { 0xE5, AddressingMode.ZeroPage },
-                    { 0xF5, AddressingMode.ZeroPageXIndexed },
-                    { 0xED, AddressingMode.Absolute },
-                    { 0xFD, AddressingMode.AbsoluteX },
-                    { 0xF9, AddressingMode.AbsoluteY },
-                    { 0xE1, AddressingMode.XIndexedIndirect },
-                    { 0xF1, AddressingMode.IndirectYIndexed },
-                };
+                return addressingModes;
             }
         }
 

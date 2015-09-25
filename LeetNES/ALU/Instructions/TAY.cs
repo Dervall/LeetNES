@@ -13,16 +13,18 @@ namespace LeetNES.ALU.Instructions
      implied       TAY           A8    1     2 */
     public class TAY : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> {{0xA8, AddressingMode.Implied}};
+
         public override string Mnemonic
         {
             get { return "TAY"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> { { 0xA8, AddressingMode.Implied } };
+                return addressingModes;
             }
         }
 

@@ -14,14 +14,19 @@ namespace LeetNES.ALU.Instructions
      */
     public class RTI : IInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> {{0x40, AddressingMode.Implied}};
+
         public string Mnemonic
         {
             get { return "RTI"; }
         }
 
-        public IDictionary<byte, AddressingMode> Variants
+        public IReadOnlyDictionary<byte, AddressingMode> Variants
         {
-            get { return new Dictionary<byte, AddressingMode>{{0x40, AddressingMode.Implied}}; }
+            get
+            {
+                return addressingModes;
+            }
         }
 
         public int Execute(CpuState cpuState, IMemory memory)

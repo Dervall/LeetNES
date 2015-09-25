@@ -18,23 +18,24 @@ namespace LeetNES.ALU.Instructions
      */
     public class LDY : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> {
+            { 0xA0, AddressingMode.Immediate },
+            { 0xA4, AddressingMode.ZeroPage },
+            { 0xB4, AddressingMode.ZeroPageXIndexed },
+            { 0xAC, AddressingMode.Absolute },
+            { 0xBC, AddressingMode.AbsoluteX }                    
+        };
+
         public override string Mnemonic
         {
             get { return "LDY"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> {
-                    { 0xA0, AddressingMode.Immediate },
-                    { 0xA4, AddressingMode.ZeroPage },
-                    { 0xB4, AddressingMode.ZeroPageXIndexed },
-                    { 0xAC, AddressingMode.Absolute },
-                    { 0xBC, AddressingMode.AbsoluteX }
-                    
-                };
+                return addressingModes;
             }
         }
 

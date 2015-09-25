@@ -20,26 +20,28 @@ namespace LeetNES.ALU.Instructions
     ///(indirect),Y  ADC (oper),Y  71    2     5*
     public class ADC : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x69, AddressingMode.Immediate},
+            {0x65, AddressingMode.ZeroPage},
+            {0x75, AddressingMode.ZeroPageXIndexed},
+            {0x6D, AddressingMode.Absolute},
+            {0x7D, AddressingMode.AbsoluteX},
+            {0x79, AddressingMode.AbsoluteY},
+            {0x61, AddressingMode.XIndexedIndirect},
+            {0x71, AddressingMode.IndirectYIndexed}
+        };
+
         public override string Mnemonic
         {
             get { return "ADC"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
-            get 
-            { 
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0x69, AddressingMode.Immediate},
-                    {0x65, AddressingMode.ZeroPage},
-                    {0x75, AddressingMode.ZeroPageXIndexed},
-                    {0x6D, AddressingMode.Absolute},
-                    {0x7D, AddressingMode.AbsoluteX},
-                    {0x79, AddressingMode.AbsoluteY},
-                    {0x61, AddressingMode.XIndexedIndirect},
-                    {0x71, AddressingMode.IndirectYIndexed}
-                }; 
+            get
+            {
+                return addressingModes;
             }
         }
 

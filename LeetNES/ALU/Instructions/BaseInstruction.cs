@@ -6,7 +6,7 @@ namespace LeetNES.ALU.Instructions
     public abstract class BaseInstruction : IInstruction
     {
         public abstract string Mnemonic { get; }
-        public abstract IDictionary<byte, AddressingMode> Variants { get; }
+        public abstract IReadOnlyDictionary<byte, AddressingMode> Variants { get; }
 
         public int Execute(CpuState cpuState, IMemory memory)
         {
@@ -108,7 +108,7 @@ namespace LeetNES.ALU.Instructions
         {
             byte arg;
             var address = memory.ReadShort(cpuState.Pc + 1);
-            var offsetAddress = address + offset;
+            ushort offsetAddress = (ushort) (address + offset);
             arg = memory[offsetAddress];
             cycles = 4;
             if ((offsetAddress & 0xFF00) != (address & 0xFF00))

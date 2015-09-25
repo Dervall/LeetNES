@@ -14,20 +14,24 @@ namespace LeetNES.ALU.Instructions
     /// implied       SEI           78    1     2
     /// </summary>
     public class SEI : BaseInstruction
-    {        
+    {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {
+                0x78, AddressingMode.Implied
+            }
+        };
+
         public override string Mnemonic
         {
             get { return "SEI"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
-            get 
-            { 
-                return new Dictionary<byte, AddressingMode> {
-                {
-                    0x78, AddressingMode.Implied
-                }}; 
+            get
+            {
+                return addressingModes;
             }
         }
 

@@ -5,14 +5,19 @@ namespace LeetNES.ALU.Instructions
 {
     public class RTS : IInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> {{0x60, AddressingMode.Implied}};
+
         public string Mnemonic
         {
             get { return "RTS"; }
         }
 
-        public IDictionary<byte, AddressingMode> Variants
+        public IReadOnlyDictionary<byte, AddressingMode> Variants
         {
-            get { return new Dictionary<byte, AddressingMode> { { 0x60, AddressingMode.Implied }}; }
+            get
+            {
+                return addressingModes;
+            }
         }
 
         public int Execute(CpuState cpuState, IMemory memory)

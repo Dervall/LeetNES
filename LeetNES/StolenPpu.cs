@@ -27,7 +27,7 @@ namespace LeetNES
         // If we get to that point, look at the generators/documentation 
         // on http://wiki.nesdev.com/w/index.php/PPU_palettes . For now, this is a
         // pre-computed version found on another wiki online.
-        private readonly uint[] RGBA_PALETTE =
+ /*       private readonly uint[] RGBA_PALETTE =
         {
             0x7C7C7CFF, 0x0000FCFF, 0x0000BCFF, 0x4428BCFF,
             0x940084FF, 0xA80020FF, 0xA81000FF, 0x881400FF,
@@ -45,14 +45,30 @@ namespace LeetNES
             0xF8B8F8FF, 0xF8A4C0FF, 0xF0D0B0FF, 0xFCE0A8FF,
             0xF8D878FF, 0xD8F878FF, 0xB8F8B8FF, 0xB8F8D8FF,
             0x00FCFCFF, 0xF8D8F8FF, 0x000000FF, 0x000000FF
-        };
+        };*/
 
-        private readonly uint[] _imageData = new uint[256*240];
+       
 
-        public uint[] ImageData
+        private readonly uint[] RGBA_PALETTE =
         {
-            get { return _imageData; }
-        }
+            0xFF7C7C7C, 0xFFFC0000, 0xFFBC0000, 0xFFBC2844,
+            0xFF840094, 0xFF2000A8, 0xFF0010A8, 0xFF001488,
+            0xFF003050, 0xFF007800, 0xFF006800, 0xFF005800,
+            0xFF584000, 0xFF000000, 0xFF000000, 0xFF000000,
+            0xFFBCBCBC, 0xFFF87800, 0xFFF85800, 0xFFFC4468,
+            0xFFCC00D8, 0xFF5800E4, 0xFF0038F8, 0xFF105CE4,
+            0xFF007CAC, 0xFF00B800, 0xFF00A800, 0xFF44A800,
+            0xFF888800, 0xFF000000, 0xFF000000, 0xFF000000,
+            0xFFF8F8F8, 0xFFFCBC3C, 0xFFFC8868, 0xFFF87898,
+            0xFFF878F8, 0xFF9858F8, 0xFF5878F8, 0xFF44A0FC,
+            0xFF00B8F8, 0xFF18F8B8, 0xFF54D858, 0xFF98F858,
+            0xFFD8E800, 0xFF787878, 0xFF000000, 0xFF000000,
+            0xFFFCFCFC, 0xFFFCE4A4, 0xFFF8B8B8, 0xFFF8B8D8,
+            0xFFF8B8F8, 0xFFC0A4F8, 0xFFB0D0F0, 0xFFA8E0FC,
+            0xFF78D8F8, 0xFF78F8D8, 0xFFB8F8B8, 0xFFD8F8B8,
+            0xFFFCFC00, 0xFFF8D8F8, 0xFF000000, 0xFF000000
+            
+        };
 
         private bool backgroundRenderingEnabled()
         {
@@ -249,7 +265,7 @@ namespace LeetNES
                             uint RGB_index = readRAM((ushort) (0x3F10 + palette_number*4 + color_index));
                             uint pixelColor = RGBA_PALETTE[RGB_index & 0x3F];
 
-                            _imageData[image_index] = pixelColor;
+                            presenter.SetPixel(px, py, pixelColor);
                         }
                     }
                 }
@@ -284,7 +300,7 @@ namespace LeetNES
                             uint RGB_index = readRAM((ushort) (0x3F10 + palette_number*4 + color_index));
                             uint pixelColor = RGBA_PALETTE[RGB_index & 0x3F];
 
-                            _imageData[image_index] = pixelColor;
+                            presenter.SetPixel(px, py, pixelColor);
                         }
                     }
                 }

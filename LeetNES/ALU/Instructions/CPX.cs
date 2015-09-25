@@ -15,21 +15,23 @@ namespace LeetNES.ALU.Instructions
      absolute      CPX oper      EC    3     4*/
     public class CPX : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0xE0, AddressingMode.Immediate},
+            {0xE4, AddressingMode.ZeroPage},
+            {0xEC, AddressingMode.Absolute},
+        };
+
         public override string Mnemonic
         {
             get { return "CPX"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0xE0, AddressingMode.Immediate},
-                    {0xE4, AddressingMode.ZeroPage},
-                    {0xEC, AddressingMode.Absolute},
-                };
+                return addressingModes;
             }
         }
 

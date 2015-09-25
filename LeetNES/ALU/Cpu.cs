@@ -43,7 +43,7 @@ namespace LeetNES.ALU
                     throw new Exception(string.Format("Unknown instruction {0:X2} encountered at {1:X4}.", opCode, state.Pc));
                 }
 
-                LogInstruction(instruction, opCode);
+            //    LogInstruction(instruction, opCode);
 
                 var instructionTime = instruction.Execute(state, mem);
                 cycle += instructionTime * 3;
@@ -96,9 +96,12 @@ namespace LeetNES.ALU
         {
             state.A = state.X = state.Y = 0;
             // TODO: FOR NESTEST ONLY
-            state.Pc = 0xC000; //(ushort) ((mem[0xFFFD] << 8) | mem[0xFFFC]);
+           // state.Pc = 0xC000; //(ushort) ((mem[0xFFFD] << 8) | mem[0xFFFC]);
+            //  state.SetFlag(CpuState.Flags.InterruptDisable, true);
+
+            state.Pc = (ushort) ((mem[0xFFFD] << 8) | mem[0xFFFC]);
             state.StatusRegister = 1 << 5;
-            state.SetFlag(CpuState.Flags.InterruptDisable, true);
+          
             state.Sp = 0xFD;
             cycle = 0;
         }

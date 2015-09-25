@@ -21,26 +21,28 @@ namespace LeetNES.ALU.Instructions
      */
     public class EOR : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x49, AddressingMode.Immediate},
+            {0x45, AddressingMode.ZeroPage},
+            {0x55, AddressingMode.ZeroPageXIndexed},
+            {0x4D, AddressingMode.Absolute},
+            {0x5D, AddressingMode.AbsoluteX},
+            {0x59, AddressingMode.AbsoluteY},
+            {0x41, AddressingMode.XIndexedIndirect},
+            {0x51, AddressingMode.IndirectYIndexed},
+        };
+
         public override string Mnemonic
         {
             get { return "EOR"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0x49, AddressingMode.Immediate},
-                    {0x45, AddressingMode.ZeroPage},
-                    {0x55, AddressingMode.ZeroPageXIndexed},
-                    {0x4D, AddressingMode.Absolute},
-                    {0x5D, AddressingMode.AbsoluteX},
-                    {0x59, AddressingMode.AbsoluteY},
-                    {0x41, AddressingMode.XIndexedIndirect},
-                    {0x51, AddressingMode.IndirectYIndexed},
-                };
+                return addressingModes;
             }
         }
 

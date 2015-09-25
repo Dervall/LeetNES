@@ -6,7 +6,7 @@ namespace LeetNES.ALU.Instructions
     public abstract class BaseStoreInstruction : IInstruction
     {
         public abstract string Mnemonic { get; }
-        public abstract IDictionary<byte, AddressingMode> Variants { get; }
+        public abstract IReadOnlyDictionary<byte, AddressingMode> Variants { get; }
 
         public int Execute(CpuState cpuState, IMemory memory)
         {
@@ -126,24 +126,27 @@ namespace LeetNES.ALU.Instructions
      */
     public class STA : BaseStoreInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x85, AddressingMode.ZeroPage},
+            {0x95, AddressingMode.ZeroPageXIndexed},
+            {0x8D, AddressingMode.Absolute},
+            {0x9D, AddressingMode.AbsoluteX},
+            {0x99, AddressingMode.AbsoluteY},
+            {0x81, AddressingMode.XIndexedIndirect},
+            {0x91, AddressingMode.IndirectYIndexed},
+        };
+
         public override string Mnemonic
         {
             get { return "STA"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> {
-                    { 0x85, AddressingMode.ZeroPage },
-                    { 0x95, AddressingMode.ZeroPageXIndexed },
-                    { 0x8D, AddressingMode.Absolute },
-                    { 0x9D, AddressingMode.AbsoluteX },
-                    { 0x99, AddressingMode.AbsoluteY },
-                    { 0x81, AddressingMode.XIndexedIndirect },
-                    { 0x91, AddressingMode.IndirectYIndexed },
-                };
+                return addressingModes;
             }
         }
 

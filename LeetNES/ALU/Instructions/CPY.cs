@@ -5,21 +5,23 @@ namespace LeetNES.ALU.Instructions
 {
     public class CPY : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0xC0, AddressingMode.Immediate},
+            {0xC4, AddressingMode.ZeroPage},
+            {0xCC, AddressingMode.Absolute},
+        };
+
         public override string Mnemonic
         {
             get { return "CPY"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0xC0, AddressingMode.Immediate},
-                    {0xC4, AddressingMode.ZeroPage},
-                    {0xCC, AddressingMode.Absolute},
-                };
+                return addressingModes;
             }
         }
 

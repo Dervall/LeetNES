@@ -5,14 +5,19 @@ namespace LeetNES.ALU.Instructions
 {
     public class PHP : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> { { 0x08, AddressingMode.Implied } };
+
         public override string Mnemonic
         {
             get { return "PHP"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
-            get { return new Dictionary<byte, AddressingMode> { { 0x08, AddressingMode.Implied }}; }
+            get
+            {
+                return addressingModes;
+            }
         }
 
         protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)

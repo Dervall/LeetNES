@@ -22,26 +22,28 @@ namespace LeetNES.ALU.Instructions
 
     public class CMP : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0xC9, AddressingMode.Immediate},
+            {0xC5, AddressingMode.ZeroPage},
+            {0xD5, AddressingMode.ZeroPageXIndexed},
+            {0xCD, AddressingMode.Absolute},
+            {0xDD, AddressingMode.AbsoluteX},
+            {0xD9, AddressingMode.AbsoluteY},
+            {0xC1, AddressingMode.XIndexedIndirect},
+            {0xD1, AddressingMode.IndirectYIndexed},
+        };
+
         public override string Mnemonic
         {
             get { return "CMP"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0xC9, AddressingMode.Immediate},
-                    {0xC5, AddressingMode.ZeroPage},
-                    {0xD5, AddressingMode.ZeroPageXIndexed},
-                    {0xCD, AddressingMode.Absolute},
-                    {0xDD, AddressingMode.AbsoluteX},
-                    {0xD9, AddressingMode.AbsoluteY},
-                    {0xC1, AddressingMode.XIndexedIndirect},
-                    {0xD1, AddressingMode.IndirectYIndexed},
-                };
+                return addressingModes;
             }
         }
 

@@ -21,7 +21,25 @@ namespace LeetNES.ALU.Instructions
 
     public static class AddressingModeExtensions
     {
+        private static readonly ushort[] sizes;
+
+        static AddressingModeExtensions()
+        {
+            var values = Enum.GetValues(typeof(AddressingMode));
+            sizes = new ushort[values.Length];
+
+            foreach (AddressingMode mode in values)
+            {
+                sizes[(int) mode] = GenerateInstructionSize(mode);
+            }
+        }
+
         public static ushort InstructionSize(this AddressingMode mode)
+        {
+            return sizes[(int) mode];
+        }
+
+        private static ushort GenerateInstructionSize(this AddressingMode mode)
         {
             switch (mode)
             {

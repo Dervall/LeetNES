@@ -21,26 +21,28 @@ namespace LeetNES.ALU.Instructions
      */
     public class ORA : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x09, AddressingMode.Immediate},
+            {0x05, AddressingMode.ZeroPage},
+            {0x15, AddressingMode.ZeroPageXIndexed},
+            {0x0D, AddressingMode.Absolute},
+            {0x1D, AddressingMode.AbsoluteX},
+            {0x19, AddressingMode.AbsoluteY},
+            {0x01, AddressingMode.XIndexedIndirect},
+            {0x11, AddressingMode.IndirectYIndexed},
+        };
+
         public override string Mnemonic
         {
             get { return "ORA"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0x09, AddressingMode.Immediate},
-                    {0x05, AddressingMode.ZeroPage},
-                    {0x15, AddressingMode.ZeroPageXIndexed},
-                    {0x0D, AddressingMode.Absolute},
-                    {0x1D, AddressingMode.AbsoluteX},
-                    {0x19, AddressingMode.AbsoluteY},
-                    {0x01, AddressingMode.XIndexedIndirect},
-                    {0x11, AddressingMode.IndirectYIndexed},
-                };
+                return addressingModes;
             }
         }
 

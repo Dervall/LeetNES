@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using LeetNES;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +14,7 @@ namespace LeetNESMonoGame
         private SpriteBatch spriteBatch;
         private Texture2D texture;
         private readonly uint[] pixelBuffer = new uint[256 * 240];
-        private bool frameReady = false;
+        private volatile bool frameReady = false;
         private int frameCount = 0;
         private int[] controllerReadCounter = new int[2];
         private bool controllerStrobing;
@@ -24,7 +25,8 @@ namespace LeetNESMonoGame
             this.emulator = emulator;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            
+            IsFixedTimeStep = false;
+
         }
 
         /// <summary>
@@ -35,7 +37,11 @@ namespace LeetNESMonoGame
         /// </summary>
         protected override void Initialize()
         {
-            var cartridge = new Cartridge("../../../LeetNES/roms/nestest.nes");//"Bomberman (U).nes");
+          //  var cartridge = new Cartridge("../../../LeetNES/roms/nestest.nes");//"Bomberman (U).nes");
+            //var cartridge = new Cartridge("../../../LeetNES/roms/Bomberman (U).nes");
+            var cartridge = new Cartridge("../../../LeetNES/roms/Balloon Fight (JU) [!].nes");
+
+            //
             emulator.LoadCartridge(cartridge);
             emulator.Reset();
             base.Initialize();
@@ -59,34 +65,37 @@ namespace LeetNESMonoGame
             {
                 emulator.Step();
             }
-            
-
+        
             base.Update(gameTime);
             frameReady = false;
+      //      Debug.WriteLine("Update " + gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            texture.SetData(pixelBuffer);
+
             spriteBatch.Begin();
-            spriteBatch.Draw(texture, new Rectangle(0, 0, 256, 240), Color.White);
+            spriteBatch.Draw(texture, new Rectangle(0, 0, 512, 480), Color.White);
 
             spriteBatch.End();
 
-            Window.Title = "LeetNES " + (frameCount / (gameTime.TotalGameTime.TotalMilliseconds/1000.0));
+            Window.Title = "LeetNES " + (frameCount / (gameTime.TotalGameTime.TotalMilliseconds/1000.0) + " " + frameCount);
+   //         Debug.WriteLine("Draw " + gameTime);
 
             base.Draw(gameTime);
         }
 
+        static Random random = new Random();
         public void SetPixel(int pixelX, int pixelY, uint c)
         {
-            pixelBuffer[(256*pixelY) + pixelX] = Color.FromNonPremultiplied((int)((c >> 24) & 0xFF), (int)((c >> 16) & 0xFF), (int)((c >> 8) & 0xFF), 255).PackedValue;;//(arbg << 8) | (0xFF000000) ;
+            pixelBuffer[(256*pixelY) + pixelX] = c;//Color.FromNonPremultiplied((int)((c >> 24) & 0xFF), (int)((c >> 16) & 0xFF), (int)((c >> 8) & 0xFF), 255).PackedValue;;//(arbg << 8) | (0xFF000000) ;
         }
 
         public void Flip()
         {
             frameCount++;
-            texture.SetData(pixelBuffer);
-            
+           
             frameReady = true;
         }
 

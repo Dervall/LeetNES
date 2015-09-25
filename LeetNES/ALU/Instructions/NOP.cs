@@ -5,14 +5,19 @@ namespace LeetNES.ALU.Instructions
 {
     public class NOP : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> { { 0xEA, AddressingMode.Implied } };
+
         public override string Mnemonic
         {
             get { return "NOP"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
-            get { return new Dictionary<byte, AddressingMode>{{0xEA, AddressingMode.Implied}}; }
+            get
+            {
+                return addressingModes;
+            }
         }
 
         protected override void InternalExecute(CpuState cpuState, IMemory memory, byte arg, Action<byte> write, ref int cycles)

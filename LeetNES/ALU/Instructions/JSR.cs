@@ -14,14 +14,19 @@ namespace LeetNES.ALU.Instructions
      absolute      JSR oper      20    3     6*/
     public class JSR : IInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> { { 0x20, AddressingMode.Absolute } };
+
         public string Mnemonic
         {
             get { return "JSR"; }
         }
 
-        public IDictionary<byte, AddressingMode> Variants
+        public IReadOnlyDictionary<byte, AddressingMode> Variants
         {
-            get { return new Dictionary<byte, AddressingMode> {{ 0x20, AddressingMode.Absolute}}; }
+            get
+            {
+                return addressingModes;
+            }
         }
 
         public int Execute(CpuState cpuState, IMemory memory)

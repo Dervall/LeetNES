@@ -11,7 +11,8 @@ namespace LeetNES.ALU.Instructions
         public abstract string Mnemonic { get; }
         protected abstract byte OpCode { get; }
 
-        public IDictionary<byte, AddressingMode> Variants {
+        // TODO: Creates a new dictionary each time. 
+        public IReadOnlyDictionary<byte, AddressingMode> Variants {
             get
             {
                 return new Dictionary<byte, AddressingMode>

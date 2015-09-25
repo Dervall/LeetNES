@@ -17,23 +17,25 @@ namespace LeetNES.ALU.Instructions
      absolute,X    ROL oper,X    3E    3     7 */
     public class ROL : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x2A, AddressingMode.Accumulator},
+            {0x26, AddressingMode.ZeroPage},
+            {0x36, AddressingMode.ZeroPageXIndexed},
+            {0x2E, AddressingMode.Absolute},
+            {0x3E, AddressingMode.AbsoluteX},
+        };
+
         public override string Mnemonic
         {
             get { return "ROL"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0x2A, AddressingMode.Accumulator},
-                    {0x26, AddressingMode.ZeroPage},
-                    {0x36, AddressingMode.ZeroPageXIndexed},
-                    {0x2E, AddressingMode.Absolute},
-                    {0x3E, AddressingMode.AbsoluteX},
-                };
+                return addressingModes;
             }
         }
 

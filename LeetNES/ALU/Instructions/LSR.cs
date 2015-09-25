@@ -19,22 +19,25 @@ namespace LeetNES.ALU.Instructions
     */
     public class LSR : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x4A, AddressingMode.Accumulator},
+            {0x46, AddressingMode.ZeroPage},
+            {0x56, AddressingMode.ZeroPageXIndexed},
+            {0x4E, AddressingMode.Absolute},
+            {0x5E, AddressingMode.AbsoluteX}
+        };
+
         public override string Mnemonic
         {
             get { return "LSR"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> {
-                    { 0x4A, AddressingMode.Accumulator },
-                    { 0x46, AddressingMode.ZeroPage },
-                    { 0x56, AddressingMode.ZeroPageXIndexed },
-                    { 0x4E, AddressingMode.Absolute },
-                    { 0x5E, AddressingMode.AbsoluteX }
-                };
+                return addressingModes;
             }
         }
 

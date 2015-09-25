@@ -5,16 +5,18 @@ namespace LeetNES.ALU.Instructions
 {
     public class BRK : IInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> {{0x00, AddressingMode.Implied}};
+
         public string Mnemonic
         {
             get { return "BRK"; }
         }
 
-        public IDictionary<byte, AddressingMode> Variants
+        public IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> { { 0x00, AddressingMode.Implied } };
+                return addressingModes;
             }
         }
 

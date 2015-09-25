@@ -15,17 +15,19 @@ namespace LeetNES.ALU.Instructions
     /// </summary>
     public class JMP : IInstruction
     {
-        public string Mnemonic { get { return "JMP"; } }
-
-        public IDictionary<byte, AddressingMode> Variants
-        {
-            get
-            {
-                return new Dictionary<byte, AddressingMode>
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
                 {
                     { 0x4C, AddressingMode.Absolute },
                     { 0x6C, AddressingMode.Indirect }
                 };
+
+        public string Mnemonic { get { return "JMP"; } }
+
+        public IReadOnlyDictionary<byte, AddressingMode> Variants
+        {
+            get
+            {
+                return addressingModes;
             }
         }
 

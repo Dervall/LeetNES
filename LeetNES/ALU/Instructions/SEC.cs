@@ -13,19 +13,21 @@ namespace LeetNES.ALU.Instructions
      implied       SEC           38    1     2*/
     public class SEC : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode> {
+        {
+            0x38, AddressingMode.Implied
+        }};
+
         public override string Mnemonic
         {
             get { return "SEC"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode> {
-                    {
-                        0x38, AddressingMode.Implied
-                    }};
+                return addressingModes;
             }
         }
 

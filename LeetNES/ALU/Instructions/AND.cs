@@ -34,26 +34,28 @@ namespace LeetNES.ALU.Instructions
     /// (indirect),Y  AND (oper),Y  31    2     5*
     public class AND : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x29, AddressingMode.Immediate},
+            {0x25, AddressingMode.ZeroPage},
+            {0x35, AddressingMode.ZeroPageXIndexed},
+            {0x2D, AddressingMode.Absolute},
+            {0x3D, AddressingMode.AbsoluteX},
+            {0x39, AddressingMode.AbsoluteY},
+            {0x21, AddressingMode.XIndexedIndirect},
+            {0x31, AddressingMode.IndirectYIndexed}
+        };
+
         public override string Mnemonic
         {
             get { return "AND"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0x29, AddressingMode.Immediate},
-                    {0x25, AddressingMode.ZeroPage},
-                    {0x35, AddressingMode.ZeroPageXIndexed},
-                    {0x2D, AddressingMode.Absolute},
-                    {0x3D, AddressingMode.AbsoluteX},
-                    {0x39, AddressingMode.AbsoluteY},
-                    {0x21, AddressingMode.XIndexedIndirect},
-                    {0x31, AddressingMode.IndirectYIndexed}
-                };
+                return addressingModes;
             }
         }
 

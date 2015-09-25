@@ -5,19 +5,21 @@ namespace LeetNES.ALU.Instructions
 {
     public class DEY : BaseInstruction
     {
+        private static readonly IReadOnlyDictionary<byte, AddressingMode> addressingModes = new Dictionary<byte, AddressingMode>
+        {
+            {0x88, AddressingMode.Implied},
+        };
+
         public override string Mnemonic
         {
             get { return "DEY"; }
         }
 
-        public override IDictionary<byte, AddressingMode> Variants
+        public override IReadOnlyDictionary<byte, AddressingMode> Variants
         {
             get
             {
-                return new Dictionary<byte, AddressingMode>
-                {
-                    {0x88, AddressingMode.Implied},
-                };
+                return addressingModes;
             }
         }
 
